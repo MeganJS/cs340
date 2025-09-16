@@ -92,8 +92,8 @@ class ImageEditor{
         const width = image._width
         const height = image._height
         
-        for (var y: number = 0; y < height; y++){
-            for (var x: number = 0; x < width; x++){
+        for (var y: number = 0; y < height; ++y){
+            for (var x: number = 0; x < width; ++x){
                 let color: Color = image.getColorAt(x,y)
                 let graylevel: number = Math.floor((color.red + color.green + color.blue) / 3)
                 let gray: Color = new Color(graylevel, graylevel, graylevel)
@@ -181,10 +181,10 @@ class ImageEditor{
         for (var y: number = 0; y < height; y++){
             for (var x: number = 0; x < width; x++){
                 let color: Color = image.getColorAt(x,y)
-                fs.writeSync(writeTo, `${color.red} ${color.green} ${color.blue}\n`)
+                fs.writeSync(writeTo, `${color.red} ${color.green} ${color.blue} `)
             }
+            fs.writeSync(writeTo,"\n")
         }
-
         fs.closeSync(writeTo)
     }
 
