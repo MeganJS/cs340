@@ -74,7 +74,7 @@ const StatusItem = (props: Props) => {
                       </b>{" "}
                       -{" "}
                       <Link
-                        to={`${props.featurePath}/${props.status.user.alias}`} //should be feed or story
+                        to={`${props.featurePath}/${props.status.user.alias}`}
                         onClick={navigateToUser}
                       >
                         {props.status.user.alias}

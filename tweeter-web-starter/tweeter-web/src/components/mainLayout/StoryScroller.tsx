@@ -9,7 +9,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { ToastActionsContext } from "../toaster/ToastContexts";
 import { useParams } from "react-router-dom";
 import { ToastType } from "../toaster/Toast";
-import Post from "../statusItem/Post";
 import StatusItem from "../statusItem/StatusItem";
 
 export const PAGE_SIZE = 10;
