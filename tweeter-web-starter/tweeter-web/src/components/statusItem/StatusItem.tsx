@@ -1,14 +1,21 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {AuthToken, FakeData, Status, User} from "tweeter-shared";
+import { ToastType } from "../toaster/Toast";
 import Post from "./Post";
-import {Status} from "tweeter-shared";
+import { ToastActionsContext } from "../toaster/ToastContexts";
+import { UserInfoActionsContext, UserInfoContext } from "../userInfo/UserInfoContexts";
 
 interface Props {
     status: Status;
+    featurePath: string;
 }
 
 const StatusItem = (props: Props) => {
-
+    const { displayToast } = useContext(ToastActionsContext);
+    const navigate = useNavigate();
+    const { displayedUser, authToken } = useContext(UserInfoContext);
+    const { setDisplayedUser } = useContext(UserInfoActionsContext);
 
     const navigateToUser = async (event: React.MouseEvent): Promise<void> => {
         event.preventDefault();
@@ -31,7 +38,21 @@ const StatusItem = (props: Props) => {
             0
           );
         }
-      };
+    };
+
+    const extractAlias = (value: string): string => {
+      const index = value.indexOf("@");
+      return value.substring(index);
+    };
+      
+    const getUser = async (
+      authToken: AuthToken,
+          alias: string
+    ): Promise<User | null> => {
+      // TODO: Replace with the result of calling server
+      return FakeData.instance.findUserByAlias(alias);
+    };
+      
     
 
     return (
@@ -53,7 +74,7 @@ const StatusItem = (props: Props) => {
                       </b>{" "}
                       -{" "}
                       <Link
-                        to={`/story/${props.status.user.alias}`} //should be feed or story
+                        to={`${props.featurePath}/${props.status.user.alias}`} //should be feed or story
                         onClick={navigateToUser}
                       >
                         {props.status.user.alias}
@@ -61,7 +82,7 @@ const StatusItem = (props: Props) => {
                     </h2>
                     {props.status.formattedDate}
                     <br />
-                    <Post status={props.status} featurePath="/story" />
+                    <Post status={props.status} featurePath={props.featurePath} />
                   </div>
                 </div>
               </div>
