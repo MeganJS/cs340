@@ -1,7 +1,6 @@
-import { useContext } from "react"
-import { User, AuthToken } from "tweeter-shared"
-import { UserInfoActionsContext, UserInfoContext } from "./UserInfoContexts"
-
+import { useContext } from "react";
+import { User, AuthToken } from "tweeter-shared";
+import { UserInfoActionsContext, UserInfoContext } from "./UserInfoContexts";
 
 interface UserInfoActions {
   updateUserInfo: (
@@ -9,21 +8,23 @@ interface UserInfoActions {
     displayedUser: User | null,
     authToken: AuthToken,
     remember: boolean
-  ) => void,
-  clearUserInfo: () => void,
-  setDisplayedUser: (user: User) => void,
+  ) => void;
+  clearUserInfo: () => void;
+  setDisplayedUser: (user: User) => void;
 }
 
 export const useUserInfoActions = (): UserInfoActions => {
-    const { updateUserInfo, clearUserInfo, setDisplayedUser } = useContext(UserInfoActionsContext);
+  const { updateUserInfo, clearUserInfo, setDisplayedUser } = useContext(
+    UserInfoActionsContext
+  );
 
-    return {
-        updateUserInfo: updateUserInfo,
-        clearUserInfo: clearUserInfo,
-        setDisplayedUser: setDisplayedUser
-    }
-}
+  return {
+    updateUserInfo: updateUserInfo,
+    clearUserInfo: clearUserInfo,
+    setDisplayedUser: setDisplayedUser,
+  };
+};
 
 export const useUserInfo = () => {
-    return useContext(UserInfoContext);
-}
+  return useContext(UserInfoContext);
+};

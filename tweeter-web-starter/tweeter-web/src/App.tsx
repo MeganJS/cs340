@@ -82,29 +82,59 @@ const AuthenticatedRoutes = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route index element={<Navigate to={`/feed/${displayedUser!.alias}`} />} />
-        <Route path="feed/:displayedUser" element={<StatusItemScroller
-          key = {`feed-${displayedUser!.alias}`}
-          itemDescription="feed" 
-          featureURL="/feed" 
-          loadMore={loadMoreFeedItems} />} />
-        <Route path="story/:displayedUser" element={<StatusItemScroller
-          key = {`story-${displayedUser!.alias}`}
-          itemDescription="story" 
-          featureURL="/story" 
-          loadMore={loadMoreStoryItems} />} />
-        <Route path="followees/:displayedUser" element={<UserItemScroller 
-          key = {`followees-${displayedUser!.alias}`}
-          itemDescription="followees" 
-          featureURL="/followees" 
-          loadMore={loadMoreFollowees} />} />
-        <Route path="followers/:displayedUser" element={<UserItemScroller 
-          key = {`followers-${displayedUser!.alias}`}
-          itemDescription="followers" 
-          featureURL="/followers" 
-          loadMore={loadMoreFollowers} />} />
+        <Route
+          index
+          element={<Navigate to={`/feed/${displayedUser!.alias}`} />}
+        />
+        <Route
+          path="feed/:displayedUser"
+          element={
+            <StatusItemScroller
+              key={`feed-${displayedUser!.alias}`}
+              itemDescription="feed"
+              featureURL="/feed"
+              loadMore={loadMoreFeedItems}
+            />
+          }
+        />
+        <Route
+          path="story/:displayedUser"
+          element={
+            <StatusItemScroller
+              key={`story-${displayedUser!.alias}`}
+              itemDescription="story"
+              featureURL="/story"
+              loadMore={loadMoreStoryItems}
+            />
+          }
+        />
+        <Route
+          path="followees/:displayedUser"
+          element={
+            <UserItemScroller
+              key={`followees-${displayedUser!.alias}`}
+              itemDescription="followees"
+              featureURL="/followees"
+              loadMore={loadMoreFollowees}
+            />
+          }
+        />
+        <Route
+          path="followers/:displayedUser"
+          element={
+            <UserItemScroller
+              key={`followers-${displayedUser!.alias}`}
+              itemDescription="followers"
+              featureURL="/followers"
+              loadMore={loadMoreFollowers}
+            />
+          }
+        />
         <Route path="logout" element={<Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to={`/feed/${displayedUser!.alias}`} />} />
+        <Route
+          path="*"
+          element={<Navigate to={`/feed/${displayedUser!.alias}`} />}
+        />
       </Route>
     </Routes>
   );

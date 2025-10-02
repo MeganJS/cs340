@@ -5,7 +5,8 @@ import { useMessageActions } from "../toaster/MessageHooks";
 import { useUserInfo } from "../userInfo/UserInfoHooks";
 
 const PostStatus = () => {
-  const { displayErrorMessage, displayInfoMessage, deleteMessage } = useMessageActions();
+  const { displayErrorMessage, displayInfoMessage, deleteMessage } =
+    useMessageActions();
 
   const { currentUser, authToken } = useUserInfo();
   const [post, setPost] = useState("");
@@ -18,10 +19,7 @@ const PostStatus = () => {
 
     try {
       setIsLoading(true);
-      postingStatusToastId = displayInfoMessage(
-        "Posting status...",
-        0
-      );
+      postingStatusToastId = displayInfoMessage("Posting status...", 0);
 
       const status = new Status(post, currentUser!, Date.now());
 

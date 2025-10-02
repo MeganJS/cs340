@@ -155,11 +155,11 @@ const Register = () => {
           />
           <label htmlFor="lastNameInput">Last Name</label>
         </div>
-        <AuthenticationFields 
-          doAuth={doRegister} 
-          checkSubmitButtonStatus={checkSubmitButtonStatus} 
+        <AuthenticationFields
+          doAuth={doRegister}
+          checkSubmitButtonStatus={checkSubmitButtonStatus}
           setAlias={setAlias}
-          setPassword={setPassword} 
+          setPassword={setPassword}
         />
         <div className="form-floating mb-3">
           <input

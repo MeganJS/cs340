@@ -65,11 +65,11 @@ const Login = (props: Props) => {
   const inputFieldFactory = () => {
     return (
       <>
-        <AuthenticationFields 
-          doAuth={doLogin} 
-          checkSubmitButtonStatus={checkSubmitButtonStatus} 
+        <AuthenticationFields
+          doAuth={doLogin}
+          checkSubmitButtonStatus={checkSubmitButtonStatus}
           setAlias={setAlias}
-          setPassword={setPassword} 
+          setPassword={setPassword}
         />
       </>
     );
