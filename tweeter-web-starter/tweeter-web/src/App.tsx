@@ -17,6 +17,9 @@ import { useUserInfo } from "./components/userInfo/UserInfoHooks";
 import { FolloweePresenter } from "./presenter/FolloweePresenter";
 import { UserItemView } from "./presenter/UserItemPresenter";
 import { FollowerPresenter } from "./presenter/FollowerPresenter";
+import { StoryPresenter } from "./presenter/StoryPresenter";
+import { StatusItemView } from "./presenter/StatusItemPresenter";
+import { FeedPresenter } from "./presenter/FeedPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -65,7 +68,8 @@ const AuthenticatedRoutes = () => {
   };
   */
   //
-
+  //moved over to StatusService
+  /*
   const loadMoreFeedItems = async (
     authToken: AuthToken,
     userAlias: string,
@@ -85,6 +89,8 @@ const AuthenticatedRoutes = () => {
     // TODO: Replace with the result of calling server
     return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
   };
+  //
+  */
 
   return (
     <Routes>
@@ -98,9 +104,10 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={`feed-${displayedUser!.alias}`}
-              itemDescription="feed"
               featureURL="/feed"
-              loadMore={loadMoreFeedItems}
+              presenterFactory={(view: StatusItemView) =>
+                new FeedPresenter(view)
+              }
             />
           }
         />
@@ -109,9 +116,10 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={`story-${displayedUser!.alias}`}
-              itemDescription="story"
               featureURL="/story"
-              loadMore={loadMoreStoryItems}
+              presenterFactory={(view: StatusItemView) =>
+                new StoryPresenter(view)
+              }
             />
           }
         />
