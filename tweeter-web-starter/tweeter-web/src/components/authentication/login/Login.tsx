@@ -25,7 +25,8 @@ const Login = (props: Props) => {
   //TODO: moveover????
   //
   const checkSubmitButtonStatus = (): boolean => {
-    return !alias || !password;
+    return presenter.current!.checkSubmitButtonStatus(alias, password);
+    //return !alias || !password;
   };
   //
 

@@ -55,4 +55,7 @@ export class LoginPresenter {
   ): Promise<[User, AuthToken]> {
     return this.userService.login(alias, password);
   }
+  public checkSubmitButtonStatus(alias: string, password: string): boolean {
+    return !alias || !password;
+  }
 }

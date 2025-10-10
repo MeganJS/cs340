@@ -27,6 +27,15 @@ const Register = () => {
   const { displayErrorMessage } = useMessageActions();
 
   const checkSubmitButtonStatus = (): boolean => {
+    return presenter.current!.checkSubmitButtonStatus(
+      firstName,
+      lastName,
+      alias,
+      password,
+      imageUrl,
+      imageFileExtension
+    );
+    /*
     return (
       !firstName ||
       !lastName ||
@@ -35,6 +44,7 @@ const Register = () => {
       !imageUrl ||
       !imageFileExtension
     );
+    */
   };
 
   const observer: RegisterView = {

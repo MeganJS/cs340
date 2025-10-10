@@ -119,4 +119,22 @@ export class RegisterPresenter {
       imageFileExtension
     );
   }
+
+  public checkSubmitButtonStatus(
+    firstName: string,
+    lastName: string,
+    alias: string,
+    password: string,
+    imageUrl: string,
+    imageFileExtension: string
+  ): boolean {
+    return (
+      !firstName ||
+      !lastName ||
+      !alias ||
+      !password ||
+      !imageUrl ||
+      !imageFileExtension
+    );
+  }
 }
