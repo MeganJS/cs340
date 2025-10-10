@@ -1,16 +1,22 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { User, AuthToken } from "tweeter-shared";
 import { UserInfoContext, UserInfoActionsContext } from "./UserInfoContexts";
-import { UserInfo } from "./UserInfo";
+//import { UserInfo } from "./UserInfo";
+import { UserInfoProviderPresenter } from "../../presenter/UserInfoProviderPresenter";
 
-const CURRENT_USER_KEY: string = "CurrentUserKey";
-const AUTH_TOKEN_KEY: string = "AuthTokenKey";
+//const CURRENT_USER_KEY: string = "CurrentUserKey";
+//const AUTH_TOKEN_KEY: string = "AuthTokenKey";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const UserInfoProvider: React.FC<Props> = ({ children }) => {
+  const presenter = useRef<UserInfoProviderPresenter | null>(null);
+  if (!presenter.current) {
+    presenter.current = new UserInfoProviderPresenter();
+  }
+  /*
   const saveToLocalStorage = (
     currentUser: User,
     authToken: AuthToken
@@ -38,9 +44,10 @@ const UserInfoProvider: React.FC<Props> = ({ children }) => {
     localStorage.removeItem(CURRENT_USER_KEY);
     localStorage.removeItem(AUTH_TOKEN_KEY);
   };
+  */
 
   const [userInfo, setUserInfo] = useState({
-    ...retrieveFromLocalStorage(),
+    ...presenter.current!.retrieveFromLocalStorage(),
   });
 
   const updateUserInfo = useCallback(
@@ -59,7 +66,7 @@ const UserInfoProvider: React.FC<Props> = ({ children }) => {
       });
 
       if (remember) {
-        saveToLocalStorage(currentUser, authToken);
+        presenter.current!.saveToLocalStorage(currentUser, authToken);
       }
     },
     []
@@ -74,7 +81,7 @@ const UserInfoProvider: React.FC<Props> = ({ children }) => {
       };
     });
 
-    clearLocalStorage();
+    presenter.current!.clearLocalStorage();
   }, []);
 
   const setDisplayedUser = useCallback((user: User) => {

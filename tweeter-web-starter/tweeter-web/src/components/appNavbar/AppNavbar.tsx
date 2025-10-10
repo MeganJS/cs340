@@ -33,21 +33,6 @@ const AppNavbar = () => {
 
   const logOut = async () => {
     presenterRef.current!.logOut(authToken!);
-    /*
-    const loggingOutToastId = displayInfoMessage("Logging Out...", 0);
-
-    try {
-      await logout(authToken!);
-
-      deleteMessage(loggingOutToastId);
-      clearUserInfo();
-      navigate("/login");
-    } catch (error) {
-      displayErrorMessage(
-        `Failed to log user out because of exception: ${error}`
-      );
-    }
-      */
   };
 
   return (
