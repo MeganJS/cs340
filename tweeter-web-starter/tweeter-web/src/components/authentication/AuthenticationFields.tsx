@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface Props {
   doAuth(): void;
   setAlias(value: string): void;
