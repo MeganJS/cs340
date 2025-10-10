@@ -2,6 +2,12 @@ import { AuthToken, User, FakeData } from "tweeter-shared";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useUserInfo, useUserInfoActions } from "../userInfo/UserInfoHooks";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+import { UserItemPresenter } from "../../presenter/UserItemPresenter";
+import {
+  UserNavigationHookPresenter,
+  UserNavigationHookView,
+} from "../../presenter/UserNavigationHookPresenter";
 
 interface UserNavigator {
   navigateToUser: (event: React.MouseEvent) => Promise<void>;
@@ -13,10 +19,22 @@ export const useUserNavigation = (): UserNavigator => {
   const { setDisplayedUser } = useUserInfoActions();
   const navigate = useNavigate();
 
+  const observer: UserNavigationHookView = {
+    setDisplayedUser: setDisplayedUser,
+    navigate: navigate,
+    displayErrorMessage: displayErrorMessage,
+  };
+
+  const presenterRef = useRef<UserNavigationHookPresenter | null>(null);
+  if (!presenterRef.current) {
+    presenterRef.current = new UserNavigationHookPresenter(observer);
+  }
+
   return {
     navigateToUser: async (event: React.MouseEvent): Promise<void> => {
-      event.preventDefault();
-
+      //event.preventDefault();
+      presenterRef.current!.navigateToUser(event, displayedUser!, authToken!);
+      /*
       try {
         const alias = extractAlias(event.target.toString());
         const url = extractURL(event.target.toString());
@@ -33,9 +51,11 @@ export const useUserNavigation = (): UserNavigator => {
           `Failed to get user because of exception: ${error}`
         );
       }
+        */
     },
   };
 };
+/*
 
 const extractAlias = (value: string): string => {
   const index = value.indexOf("@");
@@ -54,3 +74,4 @@ const getUser = async (
   // TODO: Replace with the result of calling server
   return FakeData.instance.findUserByAlias(alias);
 };
+*/
