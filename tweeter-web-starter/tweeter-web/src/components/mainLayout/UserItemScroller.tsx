@@ -10,35 +10,14 @@ import {
   UserItemView,
 } from "../../presenter/UserItemPresenter";
 
-//moved to FolloweePresenter
-export const PAGE_SIZE = 10;
-
 interface Props {
-  //itemDescription: string;
   featureURL: string;
-  /*
-  loadMore: (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastUserItem: User | null
-  ) => Promise<[User[], boolean]>;
-   */
   presenterFactory: (view: UserItemView) => UserItemPresenter;
 }
 
 const UserItemScroller = (props: Props) => {
   const { displayErrorMessage } = useMessageActions();
   const [items, setItems] = useState<User[]>([]);
-  //moved to FolloweePresenter because only used for presenter functions
-  //const [hasMoreItems, setHasMoreItems] = useState(true);
-  //const [lastItem, setLastItem] = useState<User | null>(null);
-  //
-
-  //Moved to observer object below
-  //const addItems = (newItems: User[]) =>
-  //  setItems((previousItems) => [...previousItems, ...newItems]);
-  //
 
   const { displayedUser, authToken } = useUserInfo();
   const { setDisplayedUser } = useUserInfoActions();
@@ -82,43 +61,12 @@ const UserItemScroller = (props: Props) => {
   const reset = async () => {
     setItems(() => []);
     presenterRef.current!.reset();
-    //setLastItem(() => null);
-    //setHasMoreItems(() => true);
   };
 
   //moved to FolloweePresenter
   const loadMoreItems = async () => {
     presenterRef.current!.loadMoreItems(authToken!, displayedUser!.alias);
-    /*
-    try {
-      const [newItems, hasMore] = await props.loadMore(
-        authToken!,
-        displayedUser!.alias,
-        PAGE_SIZE,
-        lastItem
-      );
-
-      setHasMoreItems(() => hasMore);
-      setLastItem(() => newItems[newItems.length - 1]);
-      addItems(newItems);
-    } catch (error) {
-      displayErrorMessage(
-        `Failed to load ${props.itemDescription} because of exception: ${error}`
-      );
-    }
-      */
   };
-
-  //moved over to UserService, FolloweePresenter
-  /*
-  const getUser = async (
-    authToken: AuthToken,
-    alias: string
-  ): Promise<User | null> => {
-    return presenterRef.current!.getUser(authToken, alias);
-    //moved up to first useEffect
-  };
-  */
 
   return (
     <>

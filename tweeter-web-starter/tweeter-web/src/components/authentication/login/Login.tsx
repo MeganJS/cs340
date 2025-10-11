@@ -22,13 +22,11 @@ const Login = (props: Props) => {
   const { updateUserInfo } = useUserInfoActions();
   const { displayErrorMessage } = useMessageActions();
 
-  //TODO: moveover????
   //
   const checkSubmitButtonStatus = (): boolean => {
     return presenter.current!.checkSubmitButtonStatus(alias, password);
     //return !alias || !password;
   };
-  //
 
   const observer: LoginView = {
     updateUserInfo: updateUserInfo,
