@@ -6,9 +6,6 @@ export const PAGE_SIZE = 10;
 
 export class FolloweePresenter extends UserItemPresenter {
   private service: FollowService;
-  //private view: UserItemView;
-  //private hasMoreItems = true;
-  //private lastItem: User | null = null;
 
   public constructor(view: UserItemView) {
     super(view);
@@ -26,7 +23,7 @@ export class FolloweePresenter extends UserItemPresenter {
 
       this.hasMoreItems = hasMore;
       this.lastItem =
-        newItems.length > 0 ? newItems[newItems.length - 1] : null; //what if newItems is empty?
+        newItems.length > 0 ? newItems[newItems.length - 1] : null; //what if newItems is empty? better be careful!
       this.view.addItems(newItems);
     } catch (error) {
       this.view.displayErrorMessage(

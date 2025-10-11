@@ -38,7 +38,6 @@ const Login = (props: Props) => {
   };
 
   //const presenter = new LoginPresenter(observer);
-
   const presenter = useRef<LoginPresenter | null>(null);
   if (!presenter.current) {
     presenter.current = new LoginPresenter(observer);

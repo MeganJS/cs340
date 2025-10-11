@@ -51,10 +51,18 @@ export class PostStatusPresenter {
     }
   }
 
-  public async postStatus(
+  public checkButtonStatus(
+    post: string,
+    authToken: AuthToken | null,
+    currentUser: User | null
+  ): boolean {
+    return !post.trim() || !authToken || !currentUser;
+  }
+
+  private async postStatus(
     authToken: AuthToken,
     newStatus: Status
   ): Promise<void> {
-    this.statusService.postStatus(authToken, newStatus);
+    await this.statusService.postStatus(authToken, newStatus);
   }
 }

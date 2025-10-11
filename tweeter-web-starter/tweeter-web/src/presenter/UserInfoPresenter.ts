@@ -139,28 +139,28 @@ export class UserInfoPresenter {
     authToken: AuthToken,
     userToUnfollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
-    return this.userService.unfollow(authToken, userToUnfollow);
+    return await this.userService.unfollow(authToken, userToUnfollow);
   }
 
   private async follow(
     authToken: AuthToken,
     userToFollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
-    return this.userService.follow(authToken, userToFollow);
+    return await this.userService.follow(authToken, userToFollow);
   }
 
   private async getFolloweeCount(
     authToken: AuthToken,
     user: User
   ): Promise<number> {
-    return this.userService.getFolloweeCount(authToken, user);
+    return await this.userService.getFolloweeCount(authToken, user);
   }
 
   private async getFollowerCount(
     authToken: AuthToken,
     user: User
   ): Promise<number> {
-    return this.userService.getFollowerCount(authToken, user);
+    return await this.userService.getFollowerCount(authToken, user);
   }
 
   private async getIsFollowerStatus(
@@ -168,6 +168,10 @@ export class UserInfoPresenter {
     user: User,
     selectedUser: User
   ): Promise<boolean> {
-    return this.userService.getIsFollowerStatus(authToken, user, selectedUser);
+    return await this.userService.getIsFollowerStatus(
+      authToken,
+      user,
+      selectedUser
+    );
   }
 }

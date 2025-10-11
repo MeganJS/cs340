@@ -53,7 +53,7 @@ export class LoginPresenter {
     alias: string,
     password: string
   ): Promise<[User, AuthToken]> {
-    return this.userService.login(alias, password);
+    return await this.userService.login(alias, password);
   }
   public checkSubmitButtonStatus(alias: string, password: string): boolean {
     return !alias || !password;

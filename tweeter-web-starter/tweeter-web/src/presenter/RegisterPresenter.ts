@@ -110,7 +110,7 @@ export class RegisterPresenter {
     userImageBytes: Uint8Array,
     imageFileExtension: string
   ): Promise<[User, AuthToken]> {
-    return this.userService.register(
+    return await this.userService.register(
       firstName,
       lastName,
       alias,

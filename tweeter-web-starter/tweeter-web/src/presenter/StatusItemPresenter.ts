@@ -45,7 +45,7 @@ export abstract class StatusItemPresenter {
     alias: string
   ): Promise<User | null> {
     // TODO: Replace with the result of calling server
-    return this.userService.getUser(authToken, alias);
+    return await this.userService.getUser(authToken, alias);
   }
 
   public abstract loadMoreItems(authToken: AuthToken, userAlias: string): void;

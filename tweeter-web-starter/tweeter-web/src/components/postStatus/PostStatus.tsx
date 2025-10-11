@@ -38,7 +38,12 @@ const PostStatus = () => {
   };
 
   const checkButtonStatus: () => boolean = () => {
-    return !post.trim() || !authToken || !currentUser;
+    return presenterRef.current!.checkButtonStatus(
+      post,
+      authToken,
+      currentUser
+    );
+    //return !post.trim() || !authToken || !currentUser;
   };
 
   return (

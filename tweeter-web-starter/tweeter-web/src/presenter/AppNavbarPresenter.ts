@@ -35,6 +35,6 @@ export class AppNavbarPresenter {
   }
 
   private async logout(authToken: AuthToken): Promise<void> {
-    this.userService.logout(authToken);
+    await this.userService.logout(authToken);
   }
 }
