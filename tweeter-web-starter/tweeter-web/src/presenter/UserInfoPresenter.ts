@@ -100,9 +100,32 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
     displayedUser: User
   ): Promise<void> {
     event.preventDefault();
-
     var followingUserToast = "";
 
+    await this.doFailureReportingFinallyOperation(
+      async () => {
+        this.view.setIsLoading(true);
+        followingUserToast = this.view.displayInfoMessage(
+          `Following ${displayedUser!.name}...`,
+          0
+        );
+
+        const [followerCount, followeeCount] = await this.follow(
+          authToken,
+          displayedUser
+        );
+
+        this.view.setIsFollower(true);
+        this.view.setFollowerCount(followerCount);
+        this.view.setFolloweeCount(followeeCount);
+      },
+      "follow user",
+      () => {
+        this.view.deleteMessage(followingUserToast);
+        this.view.setIsLoading(false);
+      }
+    );
+    /*
     try {
       this.view.setIsLoading(true);
       followingUserToast = this.view.displayInfoMessage(
@@ -126,16 +149,40 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
       this.view.deleteMessage(followingUserToast);
       this.view.setIsLoading(false);
     }
+      */
   }
+
   public async unfollowDisplayedUser(
     event: React.MouseEvent,
     authToken: AuthToken,
     displayedUser: User
   ): Promise<void> {
     event.preventDefault();
-
     var unfollowingUserToast = "";
+    await this.doFailureReportingFinallyOperation(
+      async () => {
+        this.view.setIsLoading(true);
+        unfollowingUserToast = this.view.displayInfoMessage(
+          `Unfollowing ${displayedUser!.name}...`,
+          0
+        );
 
+        const [followerCount, followeeCount] = await this.unfollow(
+          authToken,
+          displayedUser
+        );
+
+        this.view.setIsFollower(false);
+        this.view.setFollowerCount(followerCount);
+        this.view.setFolloweeCount(followeeCount);
+      },
+      "unfollow user",
+      () => {
+        this.view.deleteMessage(unfollowingUserToast);
+        this.view.setIsLoading(false);
+      }
+    );
+    /*
     try {
       this.view.setIsLoading(true);
       unfollowingUserToast = this.view.displayInfoMessage(
@@ -159,6 +206,7 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
       this.view.deleteMessage(unfollowingUserToast);
       this.view.setIsLoading(false);
     }
+      */
   }
 
   private async unfollow(

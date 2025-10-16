@@ -35,5 +35,21 @@ export abstract class Presenter<V extends View> {
     }
   }
 
+  protected async doFailureReportingFinallyOperation(
+    tryOperation: () => Promise<void>,
+    operationDescription: string,
+    finallyOperation: () => void
+  ) {
+    try {
+      await tryOperation();
+    } catch (error) {
+      this._view.displayErrorMessage(
+        `Failed to ${operationDescription} because of exception: ${error}`
+      );
+    } finally {
+      finallyOperation();
+    }
+  }
+
   protected async doAuthenticationOperation() {}
 }

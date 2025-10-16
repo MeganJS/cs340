@@ -53,7 +53,6 @@ export abstract class PagedItemPresenter<
     return await this.userService.getUser(authToken, alias);
   }
 
-  //public abstract loadMoreItems(authToken: AuthToken, userAlias: string): void;
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
     await this.doFailureReportingOperation(async () => {
       const [newItems, hasMore] = await this.getMoreItems(authToken, userAlias);

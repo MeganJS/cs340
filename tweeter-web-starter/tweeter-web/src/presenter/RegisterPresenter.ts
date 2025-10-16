@@ -79,6 +79,28 @@ export class RegisterPresenter extends Presenter<RegisterView> {
     rememberMe: boolean,
     imageFileExtension: string
   ) {
+    await this.doFailureReportingFinallyOperation(
+      async () => {
+        this.view.setIsLoading(true);
+
+        const [user, authToken] = await this.register(
+          firstName,
+          lastName,
+          alias,
+          password,
+          this._imageBytes,
+          imageFileExtension
+        );
+
+        this.view.updateUserInfo(user, user, authToken, rememberMe);
+        this.view.navigate(`/feed/${user.alias}`);
+      },
+      "register user",
+      () => {
+        this.view.setIsLoading(false);
+      }
+    );
+    /*
     try {
       this.view.setIsLoading(true);
 
@@ -100,6 +122,7 @@ export class RegisterPresenter extends Presenter<RegisterView> {
     } finally {
       this.view.setIsLoading(false);
     }
+      */
   }
 
   private async register(

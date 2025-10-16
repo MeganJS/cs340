@@ -30,6 +30,26 @@ export class LoginPresenter extends Presenter<LoginView> {
     originalUrl: string | undefined,
     rememberMe: boolean
   ) {
+    await this.doFailureReportingFinallyOperation(
+      async () => {
+        this.view.setIsLoading(true);
+
+        const [user, authToken] = await this.login(alias, password);
+
+        this.view.updateUserInfo(user, user, authToken, rememberMe);
+
+        if (!!originalUrl) {
+          this.view.navigate(originalUrl);
+        } else {
+          this.view.navigate(`/feed/${user.alias}`);
+        }
+      },
+      "log user in",
+      () => {
+        this.view.setIsLoading(false);
+      }
+    );
+    /*
     try {
       this.view.setIsLoading(true);
 
@@ -49,6 +69,7 @@ export class LoginPresenter extends Presenter<LoginView> {
     } finally {
       this.view.setIsLoading(false);
     }
+      */
   }
 
   public async login(

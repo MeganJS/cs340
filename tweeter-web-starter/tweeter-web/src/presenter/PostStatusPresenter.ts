@@ -1,6 +1,6 @@
 import { Status, AuthToken, User } from "tweeter-shared";
 import { StatusService } from "../model.service/StatusService";
-import { MessageView } from "./Presenter";
+import { MessageView, Presenter } from "./Presenter";
 
 export interface PostStatusView extends MessageView {
   //displayErrorMessage: (message: string) => void;
@@ -10,12 +10,11 @@ export interface PostStatusView extends MessageView {
   setIsLoading: (value: boolean) => void;
 }
 
-export class PostStatusPresenter {
+export class PostStatusPresenter extends Presenter<PostStatusView> {
   private statusService: StatusService;
-  private view: PostStatusView;
 
   public constructor(view: PostStatusView) {
-    this.view = view;
+    super(view);
     this.statusService = new StatusService();
   }
 
@@ -26,9 +25,30 @@ export class PostStatusPresenter {
     authToken: AuthToken
   ) {
     event.preventDefault();
-
     var postingStatusToastId = "";
 
+    await this.doFailureReportingFinallyOperation(
+      async () => {
+        this.view.setIsLoading(true);
+        postingStatusToastId = this.view.displayInfoMessage(
+          "Posting status...",
+          0
+        );
+
+        const status = new Status(post, currentUser, Date.now());
+
+        await this.postStatus(authToken, status);
+
+        this.view.setPost("");
+        this.view.displayInfoMessage("Status posted!", 2000);
+      },
+      "post the status",
+      () => {
+        this.view.deleteMessage(postingStatusToastId);
+        this.view.setIsLoading(false);
+      }
+    );
+    /*
     try {
       this.view.setIsLoading(true);
       postingStatusToastId = this.view.displayInfoMessage(
@@ -50,6 +70,7 @@ export class PostStatusPresenter {
       this.view.deleteMessage(postingStatusToastId);
       this.view.setIsLoading(false);
     }
+      */
   }
 
   public checkButtonStatus(
