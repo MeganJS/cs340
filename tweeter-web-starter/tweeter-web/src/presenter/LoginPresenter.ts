@@ -1,15 +1,15 @@
 import { User, AuthToken } from "tweeter-shared";
 import { UserService } from "../model.service/UserService";
-import { View, Presenter } from "./Presenter";
+import { View, Presenter, NavView } from "./Presenter";
 
-export interface LoginView extends View {
+export interface LoginView extends NavView {
   updateUserInfo: (
     currentUser: User,
     displayedUser: User | null,
     authToken: AuthToken,
     remember: boolean
   ) => void;
-  navigate: (pathUrl: string) => void;
+  //navigate: (pathUrl: string) => void;
   //displayErrorMessage: (message: string) => void;
   setIsLoading: (value: boolean) => void;
 }

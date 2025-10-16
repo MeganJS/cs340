@@ -1,6 +1,7 @@
 import { AuthToken, User } from "tweeter-shared";
 import { View, Presenter } from "./Presenter";
 import { UserService } from "../model.service/UserService";
+import { Service } from "../model.service/Service";
 
 export const PAGE_SIZE = 10;
 
@@ -17,14 +18,14 @@ export abstract class PagedItemPresenter<
   private _service: U;
   private userService: UserService = new UserService();
 
-  protected constructor(view: PagedItemView<T>) {
+  public constructor(view: PagedItemView<T>) {
     super(view);
     this._service = this.serviceFactory();
   }
 
   protected abstract serviceFactory(): U;
 
-  protected get hasMoreItems() {
+  public get hasMoreItems() {
     return this._hasMoreItems;
   }
   protected set hasMoreItems(value: boolean) {

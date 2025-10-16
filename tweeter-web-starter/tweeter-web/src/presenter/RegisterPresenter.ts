@@ -1,16 +1,16 @@
 import { Buffer } from "buffer";
 import { User, AuthToken } from "tweeter-shared";
 import { UserService } from "../model.service/UserService";
-import { View, Presenter } from "./Presenter";
+import { View, Presenter, NavView } from "./Presenter";
 
-export interface RegisterView extends View {
+export interface RegisterView extends NavView {
   updateUserInfo: (
     currentUser: User,
     displayedUser: User | null,
     authToken: AuthToken,
     remember: boolean
   ) => void;
-  navigate: (pathUrl: string) => void;
+  //navigate: (pathUrl: string) => void;
   //displayErrorMessage: (message: string) => void;
   setImageUrl: (imageURL: string) => void;
   setImageFileExtension: (fileExt: string) => void;
@@ -80,7 +80,6 @@ export class RegisterPresenter extends Presenter<RegisterView> {
     imageFileExtension: string
   ) {
     try {
-      //this._isLoading = true;
       this.view.setIsLoading(true);
 
       const [user, authToken] = await this.register(
@@ -99,7 +98,6 @@ export class RegisterPresenter extends Presenter<RegisterView> {
         `Failed to register user because of exception: ${error}`
       );
     } finally {
-      //this._isLoading = false;
       this.view.setIsLoading(false);
     }
   }

@@ -3,9 +3,6 @@ import { UserService } from "../model.service/UserService";
 import { MessageView, Presenter } from "./Presenter";
 
 export interface UserInfoView extends MessageView {
-  //displayErrorMessage: (message: string) => void;
-  //displayInfoMessage: (message: string, time: number) => string;
-  //deleteMessage: (message: string) => void;
   setIsFollower: (value: boolean) => void;
   setFolloweeCount: (count: number) => void;
   setFollowerCount: (count: number) => void;
@@ -14,12 +11,10 @@ export interface UserInfoView extends MessageView {
 
 export class UserInfoPresenter extends Presenter<UserInfoView> {
   private userService: UserService;
-  //private view: UserInfoView;
 
   public constructor(view: UserInfoView) {
     super(view);
     this.userService = new UserService();
-    //this.view = view;
   }
 
   public async setIsFollowerStatus(

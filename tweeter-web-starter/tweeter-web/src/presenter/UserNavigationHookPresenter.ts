@@ -1,20 +1,16 @@
 import { User, AuthToken } from "tweeter-shared";
 import { UserService } from "../model.service/UserService";
-import { Presenter, View } from "./Presenter";
+import { NavView, Presenter } from "./Presenter";
 
-export interface UserNavigationHookView extends View {
+export interface UserNavigationHookView extends NavView {
   setDisplayedUser: (user: User) => void;
-  navigate: (navUrl: string) => void;
-  //displayErrorMessage: (message: string) => void;
 }
 
 export class UserNavigationHookPresenter extends Presenter<UserNavigationHookView> {
-  //private view: UserNavigationHookView;
   private userService: UserService;
 
   public constructor(view: UserNavigationHookView) {
     super(view);
-    //this.view = view;
     this.userService = new UserService();
   }
 

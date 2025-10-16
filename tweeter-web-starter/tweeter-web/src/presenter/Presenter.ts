@@ -7,6 +7,10 @@ export interface MessageView extends View {
   deleteMessage: (message: string) => void;
 }
 
+export interface NavView extends View {
+  navigate: (pathUrl: string) => void;
+}
+
 export abstract class Presenter<V extends View> {
   private _view: V;
 
@@ -30,4 +34,6 @@ export abstract class Presenter<V extends View> {
       );
     }
   }
+
+  protected async doAuthenticationOperation() {}
 }
