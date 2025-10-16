@@ -1,27 +1,42 @@
 import { AuthToken, User } from "tweeter-shared";
 import { View, Presenter } from "./Presenter";
+import { UserService } from "../model.service/UserService";
+
+export const PAGE_SIZE = 10;
 
 export interface PagedItemView<T> extends View {
   addItems: (newItems: T[]) => void;
 }
 
-export abstract class PagedItemPresenter<T> extends Presenter<
-  PagedItemView<T>
-> {
+export abstract class PagedItemPresenter<
+  T,
+  U extends Service
+> extends Presenter<PagedItemView<T>> {
   private _lastItem: T | null = null;
   private _hasMoreItems: boolean = true;
+  private _service: U;
   private userService: UserService = new UserService();
 
-  public get hasMoreItems() {
+  protected constructor(view: PagedItemView<T>) {
+    super(view);
+    this._service = this.serviceFactory();
+  }
+
+  protected abstract serviceFactory(): U;
+
+  protected get hasMoreItems() {
     return this._hasMoreItems;
   }
-  public set hasMoreItems(value: boolean) {
+  protected set hasMoreItems(value: boolean) {
     this._hasMoreItems = value;
   }
-  public get lastItem() {
+  protected get service() {
+    return this._service;
+  }
+  protected get lastItem() {
     return this._lastItem;
   }
-  public set lastItem(value: T | null) {
+  protected set lastItem(value: T | null) {
     this._lastItem = value;
   }
 
@@ -40,17 +55,18 @@ export abstract class PagedItemPresenter<T> extends Presenter<
   //public abstract loadMoreItems(authToken: AuthToken, userAlias: string): void;
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
     await this.doFailureReportingOperation(async () => {
-      const [newItems, hasMore] = await this.service.loadMoreFollowees(
-        authToken,
-        userAlias,
-        PAGE_SIZE,
-        this.lastItem
-      );
+      const [newItems, hasMore] = await this.getMoreItems(authToken, userAlias);
 
       this.hasMoreItems = hasMore;
       this.lastItem =
         newItems.length > 0 ? newItems[newItems.length - 1] : null; //what if newItems is empty? better be careful!
       this.view.addItems(newItems);
-    }, "load followees");
+    }, this.itemDescription());
   }
+  protected abstract getMoreItems(
+    authToken: AuthToken,
+    userAlias: string
+  ): Promise<[T[], boolean]>;
+
+  protected abstract itemDescription(): string;
 }

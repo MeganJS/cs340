@@ -1,7 +1,6 @@
 import { AuthToken, User } from "tweeter-shared";
-import { UserService } from "../model.service/UserService";
-import { Presenter, View } from "./Presenter";
 import { PagedItemPresenter, PagedItemView } from "./PagedItemPresenter";
+import { FollowService } from "../model.service/FollowService";
 
 /*
 export interface UserItemView extends View {
@@ -9,7 +8,13 @@ export interface UserItemView extends View {
   //displayErrorMessage: (message: string) => void; //now inherited from View interface
 }
   */
-export abstract class UserItemPresenter extends PagedItemPresenter<User> {
+export abstract class UserItemPresenter extends PagedItemPresenter<
+  User,
+  FollowService
+> {
+  protected serviceFactory(): FollowService {
+    return new FollowService();
+  }
   /*
   private _hasMoreItems = true;
   private _lastItem: User | null = null;

@@ -2,6 +2,7 @@ import { AuthToken, Status, User } from "tweeter-shared";
 import { UserService } from "../model.service/UserService";
 import { Presenter, View } from "./Presenter";
 import { PagedItemPresenter, PagedItemView } from "./PagedItemPresenter";
+import { StatusService } from "../model.service/StatusService";
 
 /*
 export interface StatusItemView extends View {
@@ -9,7 +10,13 @@ export interface StatusItemView extends View {
 }
   */
 
-export abstract class StatusItemPresenter extends PagedItemPresenter<Status> {
+export abstract class StatusItemPresenter extends PagedItemPresenter<
+  Status,
+  StatusService
+> {
+  protected serviceFactory(): StatusService {
+    return new StatusService();
+  }
   /*
   private _lastItem: Status | null = null;
   private _hasMoreItems: boolean = true;

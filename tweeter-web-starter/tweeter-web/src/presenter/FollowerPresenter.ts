@@ -1,50 +1,21 @@
 import { AuthToken, User } from "tweeter-shared";
-import { FollowService } from "../model.service/FollowService";
 import { UserItemPresenter } from "./UserItemPresenter";
-import { PagedItemView } from "./PagedItemPresenter";
-
-export const PAGE_SIZE = 10;
+import { PAGE_SIZE } from "./PagedItemPresenter";
 
 export class FollowerPresenter extends UserItemPresenter {
-  private service: FollowService;
-
-  public constructor(view: PagedItemView<User>) {
-    super(view);
-    this.service = new FollowService();
+  protected itemDescription(): string {
+    return "load followers";
   }
 
-  public async loadMoreItems(authToken: AuthToken, userAlias: string) {
-    await this.doFailureReportingOperation(async () => {
-      const [newItems, hasMore] = await this.service.loadMoreFollowers(
-        authToken,
-        userAlias,
-        PAGE_SIZE,
-        this.lastItem
-      );
-
-      this.hasMoreItems = hasMore;
-      this.lastItem =
-        newItems.length > 0 ? newItems[newItems.length - 1] : null;
-      this.view.addItems(newItems);
-    }, "load followers");
-    /*
-    try {
-      const [newItems, hasMore] = await this.service.loadMoreFollowers(
-        authToken,
-        userAlias,
-        PAGE_SIZE,
-        this.lastItem
-      );
-
-      this.hasMoreItems = hasMore;
-      this.lastItem =
-        newItems.length > 0 ? newItems[newItems.length - 1] : null;
-      this.view.addItems(newItems);
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to load followers because of exception: ${error}`
-      );
-    }
-      */
+  protected async getMoreItems(
+    authToken: AuthToken,
+    userAlias: string
+  ): Promise<[User[], boolean]> {
+    return await this.service.loadMoreFollowers(
+      authToken,
+      userAlias,
+      PAGE_SIZE,
+      this.lastItem
+    );
   }
 }
