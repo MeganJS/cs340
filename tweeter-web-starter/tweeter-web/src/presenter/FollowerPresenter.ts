@@ -13,6 +13,20 @@ export class FollowerPresenter extends UserItemPresenter {
   }
 
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
+    await this.doFailureReportingOperation(async () => {
+      const [newItems, hasMore] = await this.service.loadMoreFollowers(
+        authToken,
+        userAlias,
+        PAGE_SIZE,
+        this.lastItem
+      );
+
+      this.hasMoreItems = hasMore;
+      this.lastItem =
+        newItems.length > 0 ? newItems[newItems.length - 1] : null; //what if newItems is empty?
+      this.view.addItems(newItems);
+    }, "load followers");
+    /*
     try {
       const [newItems, hasMore] = await this.service.loadMoreFollowers(
         authToken,
@@ -30,5 +44,6 @@ export class FollowerPresenter extends UserItemPresenter {
         `Failed to load followers because of exception: ${error}`
       );
     }
+      */
   }
 }
