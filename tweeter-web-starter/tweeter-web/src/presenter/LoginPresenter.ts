@@ -1,7 +1,8 @@
 import { User, AuthToken } from "tweeter-shared";
 import { UserService } from "../model.service/UserService";
+import { View, Presenter } from "./Presenter";
 
-export interface LoginView {
+export interface LoginView extends View {
   updateUserInfo: (
     currentUser: User,
     displayedUser: User | null,
@@ -9,17 +10,18 @@ export interface LoginView {
     remember: boolean
   ) => void;
   navigate: (pathUrl: string) => void;
-  displayErrorMessage: (message: string) => void;
+  //displayErrorMessage: (message: string) => void;
   setIsLoading: (value: boolean) => void;
 }
 
-export class LoginPresenter {
+export class LoginPresenter extends Presenter<LoginView> {
   private userService: UserService;
-  private view: LoginView;
+  //private view: LoginView;
 
   public constructor(view: LoginView) {
+    super(view);
     this.userService = new UserService();
-    this.view = view;
+    //this.view = view;
   }
 
   public async doLogin(
@@ -55,6 +57,7 @@ export class LoginPresenter {
   ): Promise<[User, AuthToken]> {
     return await this.userService.login(alias, password);
   }
+
   public checkSubmitButtonStatus(alias: string, password: string): boolean {
     return !alias || !password;
   }
