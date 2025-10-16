@@ -1,13 +1,14 @@
-import { AuthToken } from "tweeter-shared";
+import { AuthToken, Status } from "tweeter-shared";
 import { StatusService } from "../model.service/StatusService";
-import { StatusItemPresenter, StatusItemView } from "./StatusItemPresenter";
+import { StatusItemPresenter } from "./StatusItemPresenter";
+import { PagedItemView } from "./PagedItemPresenter";
 
 export const PAGE_SIZE = 10;
 
 export class FeedPresenter extends StatusItemPresenter {
   private service: StatusService;
 
-  public constructor(view: StatusItemView) {
+  public constructor(view: PagedItemView<Status>) {
     super(view);
     this.service = new StatusService();
   }

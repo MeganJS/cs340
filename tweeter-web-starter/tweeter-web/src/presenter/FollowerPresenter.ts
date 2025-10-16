@@ -1,13 +1,14 @@
-import { AuthToken } from "tweeter-shared";
+import { AuthToken, User } from "tweeter-shared";
 import { FollowService } from "../model.service/FollowService";
-import { UserItemPresenter, UserItemView } from "./UserItemPresenter";
+import { UserItemPresenter } from "./UserItemPresenter";
+import { PagedItemView } from "./PagedItemPresenter";
 
 export const PAGE_SIZE = 10;
 
 export class FollowerPresenter extends UserItemPresenter {
   private service: FollowService;
 
-  public constructor(view: UserItemView) {
+  public constructor(view: PagedItemView<User>) {
     super(view);
     this.service = new FollowService();
   }
@@ -23,7 +24,7 @@ export class FollowerPresenter extends UserItemPresenter {
 
       this.hasMoreItems = hasMore;
       this.lastItem =
-        newItems.length > 0 ? newItems[newItems.length - 1] : null; //what if newItems is empty?
+        newItems.length > 0 ? newItems[newItems.length - 1] : null;
       this.view.addItems(newItems);
     }, "load followers");
     /*
@@ -37,7 +38,7 @@ export class FollowerPresenter extends UserItemPresenter {
 
       this.hasMoreItems = hasMore;
       this.lastItem =
-        newItems.length > 0 ? newItems[newItems.length - 1] : null; //what if newItems is empty?
+        newItems.length > 0 ? newItems[newItems.length - 1] : null;
       this.view.addItems(newItems);
     } catch (error) {
       this.view.displayErrorMessage(

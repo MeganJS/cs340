@@ -1,27 +1,19 @@
 import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../model.service/UserService";
 import { Presenter, View } from "./Presenter";
+import { PagedItemPresenter, PagedItemView } from "./PagedItemPresenter";
 
+/*
 export interface UserItemView extends View {
   addItems: (items: User[]) => void;
   //displayErrorMessage: (message: string) => void; //now inherited from View interface
 }
-export abstract class UserItemPresenter extends Presenter<UserItemView> {
-  //private _view: UserItemView;
+  */
+export abstract class UserItemPresenter extends PagedItemPresenter<User> {
+  /*
   private _hasMoreItems = true;
   private _lastItem: User | null = null;
-  private userService: UserService;
-
-  protected constructor(view: UserItemView) {
-    super(view);
-    //this._view = view;
-    this.userService = new UserService();
-  }
-  /*
-  protected get view() {
-    return this._view;
-  }
-    */
+  private userService: UserService = new UserService();
 
   public get hasMoreItems() {
     return this._hasMoreItems;
@@ -50,4 +42,5 @@ export abstract class UserItemPresenter extends Presenter<UserItemView> {
   }
 
   public abstract loadMoreItems(authToken: AuthToken, userAlias: string): void;
+  */
 }
