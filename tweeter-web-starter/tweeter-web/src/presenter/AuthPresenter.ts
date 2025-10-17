@@ -13,12 +13,14 @@ export interface AuthView extends NavView {
 }
 
 export abstract class AuthPresenter<V extends AuthView> extends Presenter<V> {
-  protected userService: UserService;
+  protected userService: UserService = new UserService();
 
+  /*
   public constructor(view: V) {
     super(view);
     this.userService = new UserService();
   }
+    */
 
   public async doAuth(
     authAction: () => Promise<[User, AuthToken]>,

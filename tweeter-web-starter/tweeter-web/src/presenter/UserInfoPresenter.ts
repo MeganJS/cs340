@@ -35,25 +35,6 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
         );
       }
     }, "determine follower status");
-    /*
-    try {
-      if (currentUser === displayedUser) {
-        this.view.setIsFollower(false);
-      } else {
-        this.view.setIsFollower(
-          await this.getIsFollowerStatus(
-            authToken!,
-            currentUser!,
-            displayedUser!
-          )
-        );
-      }
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to determine follower status because of exception: ${error}`
-      );
-    }
-      */
   }
 
   public async setNumbFollowees(authToken: AuthToken, displayedUser: User) {

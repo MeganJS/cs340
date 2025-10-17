@@ -8,12 +8,14 @@ export interface RegisterView extends AuthView {
 }
 
 export class RegisterPresenter extends AuthPresenter<RegisterView> {
-  private _imageBytes: Uint8Array;
+  private _imageBytes: Uint8Array = new Uint8Array();
 
+  /*
   public constructor(view: RegisterView) {
     super(view);
     this._imageBytes = new Uint8Array();
   }
+    */
 
   public handleImageFile(file: File | undefined) {
     if (file) {

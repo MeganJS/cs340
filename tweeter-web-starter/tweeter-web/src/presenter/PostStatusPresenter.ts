@@ -8,12 +8,13 @@ export interface PostStatusView extends MessageView {
 }
 
 export class PostStatusPresenter extends Presenter<PostStatusView> {
-  private statusService: StatusService;
-
+  private statusService: StatusService = new StatusService();
+  /*
   public constructor(view: PostStatusView) {
     super(view);
     this.statusService = new StatusService();
   }
+    */
 
   public async submitPost(
     event: React.MouseEvent,

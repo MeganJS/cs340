@@ -7,12 +7,13 @@ export interface UserNavigationHookView extends NavView {
 }
 
 export class UserNavigationHookPresenter extends Presenter<UserNavigationHookView> {
-  private userService: UserService;
-
+  private userService: UserService = new UserService();
+  /*
   public constructor(view: UserNavigationHookView) {
     super(view);
     this.userService = new UserService();
   }
+    */
 
   public async navigateToUser(
     event: React.MouseEvent,
@@ -32,24 +33,6 @@ export class UserNavigationHookPresenter extends Presenter<UserNavigationHookVie
         }
       }
     }, "get user");
-    /*
-    try {
-      const alias = this.extractAlias(event.target.toString());
-      const url = this.extractURL(event.target.toString());
-      const toUser = await this.getUser(authToken, alias);
-
-      if (toUser) {
-        if (!toUser.equals(displayedUser)) {
-          this.view.setDisplayedUser(toUser);
-          this.view.navigate(`${url}/${toUser.alias}`);
-        }
-      }
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to get user because of exception: ${error}`
-      );
-    }
-      */
   }
 
   private extractAlias(value: string): string {
