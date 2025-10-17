@@ -7,6 +7,10 @@ export interface MessageView extends View {
   deleteMessage: (message: string) => void;
 }
 
+export interface MessageLoadView extends MessageView {
+  setIsLoading: (value: boolean) => void;
+}
+
 export interface NavView extends View {
   navigate: (pathUrl: string) => void;
 }

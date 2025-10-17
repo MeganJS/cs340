@@ -18,8 +18,10 @@ import { FeedPresenter } from "./presenter/FeedPresenter";
 import { PagedItemView } from "./presenter/PagedItemPresenter";
 import { Status, User } from "tweeter-shared";
 import ItemScroller from "./components/mainLayout/ItemScroller";
-import StatusItem from "./components/statusItem/StatusItem";
-import UserItem from "./components/userItem/UserItem";
+//import StatusItem from "./components/statusItem/StatusItem";
+//import UserItem from "./components/userItem/UserItem";
+import Item from "./components/statusItem/Item";
+import Post from "./components/statusItem/Post";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -45,6 +47,7 @@ const App = () => {
 const AuthenticatedRoutes = () => {
   const { displayedUser } = useUserInfo();
 
+  /*
   const statusItemComponentFactory = (item: Status, featureURL: string) => {
     return (
       <>
@@ -52,11 +55,47 @@ const AuthenticatedRoutes = () => {
       </>
     );
   };
-
   const userItemComponentFactory = (item: User, featureURL: string) => {
     return (
       <>
         <UserItem user={item} featurePath={featureURL} />
+      </>
+    );
+  };
+  */
+
+  const statItemComponentFactory = (item: Status, featureURL: string) => {
+    return (
+      <>
+        <Item
+          item={item}
+          user={item.user}
+          featurePath={featureURL}
+          itemBodyFactory={(item) => {
+            return (
+              <>
+                {item.formattedDate}
+                <br />
+                <Post status={item} featurePath={featureURL} />
+              </>
+            );
+          }}
+        />
+      </>
+    );
+  };
+
+  const useItemComponentFactory = (item: User, featureURL: string) => {
+    return (
+      <>
+        <Item
+          item={item}
+          user={item}
+          featurePath={featureURL}
+          itemBodyFactory={(item) => {
+            return <></>;
+          }}
+        />
       </>
     );
   };
@@ -77,7 +116,7 @@ const AuthenticatedRoutes = () => {
               presenterFactory={(view: PagedItemView<Status>) =>
                 new FeedPresenter(view)
               }
-              itemComponentFactory={statusItemComponentFactory}
+              itemComponentFactory={statItemComponentFactory}
             />
           }
         />
@@ -90,7 +129,7 @@ const AuthenticatedRoutes = () => {
               presenterFactory={(view: PagedItemView<Status>) =>
                 new StoryPresenter(view)
               }
-              itemComponentFactory={statusItemComponentFactory}
+              itemComponentFactory={statItemComponentFactory}
             />
           }
         />
@@ -103,7 +142,7 @@ const AuthenticatedRoutes = () => {
               presenterFactory={(view: PagedItemView<User>) =>
                 new FolloweePresenter(view)
               }
-              itemComponentFactory={userItemComponentFactory}
+              itemComponentFactory={useItemComponentFactory}
             />
           }
         />
@@ -116,7 +155,7 @@ const AuthenticatedRoutes = () => {
               presenterFactory={(view: PagedItemView<User>) =>
                 new FollowerPresenter(view)
               }
-              itemComponentFactory={userItemComponentFactory}
+              itemComponentFactory={useItemComponentFactory}
             />
           }
         />
