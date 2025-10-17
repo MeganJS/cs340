@@ -10,7 +10,7 @@ export class LoginPresenter extends AuthPresenter<AuthView> {
   ) {
     await this.doAuth(
       async () => {
-        return this.login(alias, password);
+        return await this.login(alias, password);
       },
       (userAlias: string) => {
         if (!!originalUrl) {

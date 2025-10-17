@@ -61,7 +61,7 @@ export class RegisterPresenter extends AuthPresenter<RegisterView> {
   ) {
     await this.doAuth(
       async () => {
-        return this.register(
+        return await this.register(
           //does this need to be awaited?
           firstName,
           lastName,

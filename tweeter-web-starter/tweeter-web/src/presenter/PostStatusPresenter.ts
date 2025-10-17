@@ -3,9 +3,6 @@ import { StatusService } from "../model.service/StatusService";
 import { MessageView, Presenter } from "./Presenter";
 
 export interface PostStatusView extends MessageView {
-  //displayErrorMessage: (message: string) => void;
-  //displayInfoMessage: (message: string, time: number) => string;
-  //deleteMessage: (message: string) => void;
   setPost: (post: string) => void;
   setIsLoading: (value: boolean) => void;
 }
