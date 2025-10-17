@@ -6,7 +6,8 @@ import AuthenticationFormLayout from "../AuthenticationFormLayout";
 import AuthenticationFields from "../AuthenticationFields";
 import { useMessageActions } from "../../toaster/MessageHooks";
 import { useUserInfoActions } from "../../userInfo/UserInfoHooks";
-import { LoginPresenter, LoginView } from "../../../presenter/LoginPresenter";
+import { LoginPresenter } from "../../../presenter/LoginPresenter";
+import { AuthView } from "../../../presenter/AuthPresenter";
 
 interface Props {
   originalUrl?: string;
@@ -28,7 +29,7 @@ const Login = (props: Props) => {
     //return !alias || !password;
   };
 
-  const observer: LoginView = {
+  const observer: AuthView = {
     updateUserInfo: updateUserInfo,
     navigate: navigate,
     displayErrorMessage: displayErrorMessage,

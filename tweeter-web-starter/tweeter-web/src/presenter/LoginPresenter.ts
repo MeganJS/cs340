@@ -1,35 +1,28 @@
 import { User, AuthToken } from "tweeter-shared";
-import { UserService } from "../model.service/UserService";
-import { View, Presenter, NavView } from "./Presenter";
+import { AuthPresenter, AuthView } from "./AuthPresenter";
 
-export interface LoginView extends NavView {
-  updateUserInfo: (
-    currentUser: User,
-    displayedUser: User | null,
-    authToken: AuthToken,
-    remember: boolean
-  ) => void;
-  //navigate: (pathUrl: string) => void;
-  //displayErrorMessage: (message: string) => void;
-  setIsLoading: (value: boolean) => void;
-}
-
-export class LoginPresenter extends Presenter<LoginView> {
-  private userService: UserService;
-  //private view: LoginView;
-
-  public constructor(view: LoginView) {
-    super(view);
-    this.userService = new UserService();
-    //this.view = view;
-  }
-
+export class LoginPresenter extends AuthPresenter<AuthView> {
   public async doLogin(
     alias: string,
     password: string,
     originalUrl: string | undefined,
     rememberMe: boolean
   ) {
+    await this.doAuth(
+      async () => {
+        return this.login(alias, password);
+      },
+      (userAlias: string) => {
+        if (!!originalUrl) {
+          this.view.navigate(originalUrl);
+        } else {
+          this.view.navigate(`/feed/${userAlias}`);
+        }
+      },
+      rememberMe,
+      "log user in"
+    );
+    /*
     await this.doFailureReportingFinallyOperation(
       async () => {
         this.view.setIsLoading(true);
@@ -49,27 +42,7 @@ export class LoginPresenter extends Presenter<LoginView> {
         this.view.setIsLoading(false);
       }
     );
-    /*
-    try {
-      this.view.setIsLoading(true);
-
-      const [user, authToken] = await this.login(alias, password);
-
-      this.view.updateUserInfo(user, user, authToken, rememberMe);
-
-      if (!!originalUrl) {
-        this.view.navigate(originalUrl);
-      } else {
-        this.view.navigate(`/feed/${user.alias}`);
-      }
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to log user in because of exception: ${error}`
-      );
-    } finally {
-      this.view.setIsLoading(false);
-    }
-      */
+    */
   }
 
   public async login(
