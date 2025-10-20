@@ -1,0 +1,24 @@
+{
+  "name": "aws-s3-exercise",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/aws-sdk": "^0.0.42",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.913.0",
+    "@types/node": "^24.9.0",
+    "typescript": "^5.9.2"
+  }
+}
