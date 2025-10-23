@@ -2,7 +2,7 @@ import {
   PostStatusPresenter,
   PostStatusView,
 } from "../../src/presenter/PostStatusPresenter";
-import { UserService } from "../../src/model.service/UserService";
+import { StatusService } from "../../src/model.service/StatusService";
 import { AuthToken } from "tweeter-shared";
 import {
   anything,
@@ -17,9 +17,10 @@ import {
 describe("PostStatusPresenter", () => {
   let mockPostStatusView: PostStatusView;
   let spyPostStatusPresenterInstance: PostStatusPresenter;
-  let mockService: UserService;
+  let mockService: StatusService;
 
   const authToken: AuthToken = new AuthToken("abc123", Date.now());
+  const postString: string = "new post string";
 
   beforeEach(() => {
     mockPostStatusView = mock<PostStatusView>();
@@ -31,51 +32,74 @@ describe("PostStatusPresenter", () => {
     const spyPostStatusPresenter = spy(
       new PostStatusPresenter(mockPostStatusViewInstance)
     );
+    mockService = mock<StatusService>();
+    when(spyPostStatusPresenter.statusService).thenReturn(
+      instance(mockService)
+    );
+
     spyPostStatusPresenterInstance = instance(spyPostStatusPresenter);
-    //appNavbarPresenter = new AppNavbarPresenter(mockAppNavbarViewInstance);
-
-    mockService = mock<UserService>();
-    //const mockServiceInstance = instance(mockService);
-    when(spyPostStatusPresenter.userService).thenReturn(instance(mockService));
   });
 
-  it("tells the view to display a logging out message", async () => {
-    await spyPostStatusPresenterInstance.logOut(authToken);
-    verify(mockPostStatusView.displayInfoMessage("Logging Out...", 0)).once();
+  it("tells the view to display a posting status message", async () => {
+    await spyPostStatusPresenterInstance.submitPost(
+      postString,
+      anything(),
+      authToken
+    );
+    verify(
+      mockPostStatusView.displayInfoMessage("Posting status...", 0)
+    ).once();
   });
 
-  it("calls logout on the user service with the correct auth token", async () => {
-    await spyPostStatusPresenterInstance.logOut(authToken);
-    verify(mockService.logout(authToken)).once();
+  it("calls postStatus on the post status service with the correct status string and auth token", async () => {
+    await spyPostStatusPresenterInstance.submitPost(
+      postString,
+      anything(),
+      authToken
+    );
+    verify(mockService.postStatus(authToken, anything())).once();
 
-    let [capturedAuthToken] = capture(mockService.logout).last(); //returns parameters from last call of logout, [] desctructures
-    expect(capturedAuthToken).toEqual(authToken);
+    let [capturedAuth, capturedStatus] = capture(mockService.postStatus).last(); //returns parameters from last call of logout, [] desctructures
+    expect(capturedStatus.post).toEqual(postString);
   });
 
-  it("tells the view to clear the info message that was displayed previously, clear user info, and navigate to the login page", async () => {
-    await spyPostStatusPresenterInstance.logOut(authToken);
+  it("tells the view to clear the info message that was displayed previously, clear the post, and display a status posted message", async () => {
+    await spyPostStatusPresenterInstance.submitPost(
+      postString,
+      anything(),
+      authToken
+    );
 
     verify(mockPostStatusView.deleteMessage("messageId123")).once();
-    verify(mockPostStatusView.clearUserInfo()).once();
-    verify(mockPostStatusView.navigate(anything())).once();
+    verify(mockPostStatusView.setPost("")).once();
+    verify(mockPostStatusView.displayInfoMessage("Status posted!", 2000));
 
     verify(mockPostStatusView.displayErrorMessage(anything())).never();
   });
 
-  it("tells the view to display an error message and does not tell it to clear the info message, clear the user info or navigate to the login page.", async () => {
+  it(" tells the view to clear the info message and display an error message but does not tell it to clear the post or display a status posted message", async () => {
     let error = new Error("A (mock) error occurred");
-    when(mockService.logout(anything())).thenThrow(error);
+    when(mockService.postStatus(anything(), anything())).thenThrow(error);
 
-    await spyPostStatusPresenterInstance.logOut(authToken);
+    await spyPostStatusPresenterInstance.submitPost(
+      postString,
+      anything(),
+      authToken
+    );
 
     verify(
+      mockPostStatusView.displayInfoMessage(anything(), anything())
+    ).once();
+    verify(mockPostStatusView.deleteMessage("messageId123")).once();
+    verify(
       mockPostStatusView.displayErrorMessage(
-        `Failed to log user out because of exception: ${error.message}`
+        `Failed to post the status because of exception: ${error.message}`
       )
     ).once();
-    verify(mockPostStatusView.deleteMessage(anything())).never();
-    verify(mockPostStatusView.clearUserInfo()).never();
-    verify(mockPostStatusView.navigate("/login")).never();
+    verify(mockPostStatusView.setPost(anything())).never();
+    verify(
+      mockPostStatusView.displayInfoMessage("Status posted!", 2000)
+    ).never();
 
     let [capturedErrorString] = capture(
       mockPostStatusView.displayErrorMessage

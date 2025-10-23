@@ -8,21 +8,29 @@ export interface PostStatusView extends MessageLoadView {
 }
 
 export class PostStatusPresenter extends Presenter<PostStatusView> {
-  private statusService: StatusService = new StatusService();
+  private _statusService: StatusService = new StatusService();
   /*
   public constructor(view: PostStatusView) {
     super(view);
     this.statusService = new StatusService();
   }
     */
+  /*
+  public statusServiceFactory() {
+    return new StatusService();
+  }
+    */
+
+  public get statusService() {
+    return this._statusService;
+  }
 
   public async submitPost(
-    event: React.MouseEvent,
     post: string,
     currentUser: User,
     authToken: AuthToken
   ) {
-    event.preventDefault();
+    //event.preventDefault();
     var postingStatusToastId = "";
 
     await this.doFailureReportingFinallyOperation(
