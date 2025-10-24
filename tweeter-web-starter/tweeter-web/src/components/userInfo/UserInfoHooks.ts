@@ -28,3 +28,5 @@ export const useUserInfoActions = (): UserInfoActions => {
 export const useUserInfo = () => {
   return useContext(UserInfoContext);
 };
+
+export default useUserInfo;

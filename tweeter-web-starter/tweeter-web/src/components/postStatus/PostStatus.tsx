@@ -7,7 +7,11 @@ import {
   PostStatusView,
 } from "../../presenter/PostStatusPresenter";
 
-const PostStatus = () => {
+interface Props {
+  presenter?: PostStatusPresenter;
+}
+
+const PostStatus = (props?: Props) => {
   const { displayErrorMessage, displayInfoMessage, deleteMessage } =
     useMessageActions();
 
@@ -25,7 +29,8 @@ const PostStatus = () => {
 
   const presenterRef = useRef<PostStatusPresenter | null>(null);
   if (!presenterRef.current) {
-    presenterRef.current = new PostStatusPresenter(observer);
+    presenterRef.current =
+      props?.presenter ?? new PostStatusPresenter(observer);
   }
 
   const submitPost = async (event: React.MouseEvent) => {
@@ -53,6 +58,7 @@ const PostStatus = () => {
         <textarea
           className="form-control"
           id="postStatusTextArea"
+          aria-label="post status text area"
           rows={10}
           placeholder="What's on your mind?"
           value={post}
@@ -64,6 +70,7 @@ const PostStatus = () => {
       <div className="form-group">
         <button
           id="postStatusButton"
+          aria-label="post status button"
           className="btn btn-md btn-primary me-1"
           type="button"
           disabled={checkButtonStatus()}
@@ -82,6 +89,7 @@ const PostStatus = () => {
         </button>
         <button
           id="clearStatusButton"
+          aria-label="clear status button"
           className="btn btn-md btn-secondary"
           type="button"
           disabled={checkButtonStatus()}
