@@ -11,6 +11,7 @@ import { AuthView } from "../../../presenter/AuthPresenter";
 
 interface Props {
   originalUrl?: string;
+  presenter?: LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -39,7 +40,7 @@ const Login = (props: Props) => {
   //const presenter = new LoginPresenter(observer);
   const presenter = useRef<LoginPresenter | null>(null);
   if (!presenter.current) {
-    presenter.current = new LoginPresenter(observer);
+    presenter.current = props.presenter ?? new LoginPresenter(observer);
   }
 
   const doLogin = async () => {

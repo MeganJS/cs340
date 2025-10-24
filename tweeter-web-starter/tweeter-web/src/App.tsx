@@ -18,8 +18,6 @@ import { FeedPresenter } from "./presenter/FeedPresenter";
 import { PagedItemView } from "./presenter/PagedItemPresenter";
 import { Status, User } from "tweeter-shared";
 import ItemScroller from "./components/mainLayout/ItemScroller";
-//import StatusItem from "./components/statusItem/StatusItem";
-//import UserItem from "./components/userItem/UserItem";
 import Item from "./components/statusItem/Item";
 import Post from "./components/statusItem/Post";
 
