@@ -72,7 +72,9 @@ describe("PostStatusPresenter", () => {
 
     verify(mockPostStatusView.deleteMessage("messageId123")).once();
     verify(mockPostStatusView.setPost("")).once();
-    verify(mockPostStatusView.displayInfoMessage("Status posted!", 2000));
+    verify(
+      mockPostStatusView.displayInfoMessage("Status posted!", 2000)
+    ).once();
 
     verify(mockPostStatusView.displayErrorMessage(anything())).never();
   });

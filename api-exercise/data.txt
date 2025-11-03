@@ -1,0 +1,7 @@
+{
+"to": "megsters47@gmail.com",
+"from": "megsters47@gmail.com",
+"subject": "Testing from Curl",
+"textBody": "test time body",
+"htmlBody": "test time html"
+}
