@@ -8,7 +8,7 @@ export class User {
   }
 
   toString(): string {
-    return `@${this.handle} ${this.name}`;
+    return `${this.handle} ${this.name}`;
   }
 }
 /*
