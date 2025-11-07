@@ -6,7 +6,7 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { User } from "./entities";
+import { User } from "../entity/User";
 
 export class FollowsDAO {
   readonly tableName = "follows";
@@ -18,16 +18,18 @@ export class FollowsDAO {
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
-  async getFollow(follower: User): Promise<User[] | undefined> {
+  async getFollow(follower: User, followee: User): Promise<User[] | undefined> {
     const params = {
       TableName: this.tableName,
       Key: {
         [this.followerAttr]: follower.handle,
-        //[this.followerNameAttr]: follower.name,
-      }, //this may need to be just the handle?
-      //change to get all?
+        [this.followeeAttr]: followee.handle,
+      },
     };
 
+    //this may need to be just the handle?
+    //change to get all?
+    //[this.followerNameAttr]: follower.name,
     const output = await this.client.send(new GetCommand(params));
     return output.Item == undefined
       ? undefined
@@ -61,7 +63,7 @@ export class FollowsDAO {
       TableName: this.tableName,
       Key: {
         [this.followerAttr]: follower.handle,
-        //[this.followerNameAttr]: follower.name,
+        [this.followeeAttr]: followee.handle,
       },
       ExpressionAttributeValues: {
         ":followerName": follower.name,
@@ -85,7 +87,7 @@ export class FollowsDAO {
       Key: {
         [this.followerAttr]: follower.handle,
         //[this.followerNameAttr]: follower.name,
-        //[this.followeeAttr]: followee.handle,
+        [this.followeeAttr]: followee.handle,
         //[this.followeeNameAttr]: followee.name,
       },
     };
