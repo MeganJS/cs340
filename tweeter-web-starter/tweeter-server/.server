@@ -8,5 +8,6 @@ tweeterLogin | lambda/user/LoginLambda.handler
 tweeterRegister | lambda/user/RegisterLambda.handler
 tweeterLogout | lambda/user/LogoutLambda.handler
 tweeterUnfollowUser | lambda/user/UnfollowUserLambda.handler
+tweeterFollowUser | lambda/user/FollowUserLambda.handler
 '
 LAMBDALAYER_ARN='arn:aws:lambda:us-west-2:649209434077:layer:tweeter-service-dependencies:6'
