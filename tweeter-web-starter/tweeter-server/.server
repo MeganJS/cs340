@@ -13,5 +13,6 @@ tweeterGetFolloweeCount | lambda/user/GetFolloweeCountLambda.handler
 tweeterGetFollowerCount | lambda/user/GetFollowerCountLambda.handler
 tweeterGetIsFollowerStatus | lambda/user/GetIsFollowerStatusLambda.handler
 tweeterGetStoryItems | lambda/status/GetStoryItemsLambda.handler
+tweeterGetFeedItems | lambda/status/GetFeedItemsLambda.handler
 '
 LAMBDALAYER_ARN='arn:aws:lambda:us-west-2:649209434077:layer:tweeter-service-dependencies:8'
