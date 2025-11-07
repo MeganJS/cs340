@@ -9,7 +9,7 @@ export class FollowService implements Service {
     lastUserItem: UserDTO | null
   ): Promise<[UserDTO[], boolean]> {
     // TODO: Replace with the result of calling server
-    return this.getFakeData(lastUserItem, pageSize, userAlias);
+    return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
   public async loadMoreFollowers(
@@ -19,7 +19,7 @@ export class FollowService implements Service {
     lastUserItem: UserDTO | null
   ): Promise<[UserDTO[], boolean]> {
     // TODO: Replace with the result of calling server
-    return this.getFakeData(lastUserItem, pageSize, userAlias);
+    return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
   private async getFakeData(
