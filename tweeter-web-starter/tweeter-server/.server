@@ -1,0 +1,7 @@
+BUCKET='cs340-tweeter-247'
+LAMBDA_ROLE='arn:aws:iam::649209434077:user/cs340user'
+EDIT_LAMBDALIST='
+TODO: Enter a newline separated list of lambda names and corresponding lambda function names as follows:
+tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
+'
+LAMBDALAYER_ARN='arn:aws:lambda:us-west-2:649209434077:layer:tweeter-service-dependencies:1'
