@@ -15,7 +15,10 @@ export type { AuthTokenDTO } from "./model/dto/AuthTokenDTO";
 //requests
 export type { PagedUserItemRequest } from "./model/net/request/PagedUserItemRequest";
 export type { UserItemRequest } from "./model/net/request/UserItemRequest";
+export type { AuthRequest } from "./model/net/request/AuthRequest";
+export type { RegisterRequest } from "./model/net/request/RegisterRequest";
 
 //responses
 export type { PagedUserItemResponse } from "./model/net/response/PagedUserItemResponse";
 export type { UserItemResponse } from "./model/net/response/UserItemResponse";
+export type { AuthResponse } from "./model/net/response/AuthResponse";
