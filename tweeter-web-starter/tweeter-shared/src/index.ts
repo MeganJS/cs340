@@ -10,9 +10,12 @@ export { FakeData } from "./util/FakeData";
 
 //DTOs
 export type { UserDTO } from "./model/dto/UserDTO";
+export type { AuthTokenDTO } from "./model/dto/AuthTokenDTO";
 
 //requests
 export type { PagedUserItemRequest } from "./model/net/request/PagedUserItemRequest";
+export type { UserItemRequest } from "./model/net/request/UserItemRequest";
 
 //responses
 export type { PagedUserItemResponse } from "./model/net/response/PagedUserItemResponse";
+export type { UserItemResponse } from "./model/net/response/UserItemResponse";
