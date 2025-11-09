@@ -1,6 +1,6 @@
 import { StatusDTO } from "../../dto/StatusDTO";
-import { TweeterRequest } from "./TweeterRequest";
+import { TokenRequest } from "./TokenRequest";
 
-export interface StatusItemRequest extends TweeterRequest {
+export interface StatusItemRequest extends TokenRequest {
   readonly statusItem: StatusDTO;
 }

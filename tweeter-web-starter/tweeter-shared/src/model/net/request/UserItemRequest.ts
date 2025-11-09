@@ -1,5 +1,5 @@
-import { TweeterRequest } from "./TweeterRequest";
+import { TokenRequest } from "./TokenRequest";
 
-export interface UserItemRequest extends TweeterRequest {
+export interface UserItemRequest extends TokenRequest {
   readonly alias: string;
 }

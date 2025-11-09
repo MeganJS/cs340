@@ -11,9 +11,11 @@ export { FakeData } from "./util/FakeData";
 //DTOs
 export type { UserDTO } from "./model/dto/UserDTO";
 export type { AuthTokenDTO } from "./model/dto/AuthTokenDTO";
+export type { StatusDTO } from "./model/dto/StatusDTO";
 
 //requests
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
+export type { TokenRequest } from "./model/net/request/TokenRequest";
 export type { PagedUserItemRequest } from "./model/net/request/PagedUserItemRequest";
 export type { PagedStatusItemRequest } from "./model/net/request/PagedStatusItemRequest";
 export type { UserItemRequest } from "./model/net/request/UserItemRequest";

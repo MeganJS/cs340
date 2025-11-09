@@ -1,8 +1,8 @@
-import { TweeterRequest, TweeterResponse } from "tweeter-shared";
+import { TokenRequest, TweeterResponse } from "tweeter-shared";
 import { UserService } from "../../model/service/UserService";
 
 export const handler = async (
-  request: TweeterRequest
+  request: TokenRequest
 ): Promise<TweeterResponse> => {
   const userService: UserService = new UserService();
 

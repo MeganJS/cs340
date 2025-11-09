@@ -1,6 +1,6 @@
 import { FakeData, Status } from "tweeter-shared";
 import { Service } from "./Service";
-import { StatusDTO } from "tweeter-shared/dist/model/dto/StatusDTO";
+import { StatusDTO } from "tweeter-shared";
 
 export class StatusService implements Service {
   public async loadMoreFeedItems(
