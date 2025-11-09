@@ -3,6 +3,8 @@ import {
   PagedItemResponse,
   Status,
   StatusDTO,
+  StatusItemRequest,
+  TweeterResponse,
   User,
   UserDTO,
 } from "tweeter-shared";
@@ -13,18 +15,31 @@ export class ServerFacade {
     "https://lhk36rmnv5.execute-api.us-west-2.amazonaws.com/dev";
   private clientCommunicator = new ClientCommunicator(this.SERVER_URL);
 
-  public async checkResponse<T, U>(
+  private checkItemsResponse<T, U>(
     response: PagedItemResponse<T>,
     items: U[] | null,
     description: string
-  ): Promise<[U[], boolean]> {
+  ) {
     // Handle errors
-    if (response.success) {
+    this.checkResponse(response, () => {
       if (items == null) {
         throw new Error(`No ${description} items found`);
-      } else {
-        return [items, response.hasMore];
       }
+    });
+
+    if (response.success) {
+    } else {
+      console.error(response);
+      throw new Error(response.message ?? undefined);
+    }
+  }
+
+  private checkResponse<REQ extends TweeterResponse>(
+    response: REQ,
+    responseOperation: () => void
+  ) {
+    if (response.success) {
+      responseOperation();
     } else {
       console.error(response);
       throw new Error(response.message ?? undefined);
@@ -45,7 +60,12 @@ export class ServerFacade {
       response.success && response.items
         ? response.items.map((dto) => User.fromDTO(dto) as User)
         : null;
-    return await this.checkResponse(response, items, followType);
+    try {
+      this.checkItemsResponse(response, items, followType);
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+    return [items!, response.hasMore]; //TODO test this!!!!
     // Handle errors
     /*
     if (response.success) {
@@ -75,20 +95,20 @@ export class ServerFacade {
       response.success && response.items
         ? response.items.map((dto) => Status.fromDTO(dto) as Status)
         : null;
-
-    return await this.checkResponse(response, items, statusType);
-    // Handle errors
-    /*
-    if (response.success) {
-      if (items == null) {
-        throw new Error(`No ${statusType} items found`);
-      } else {
-        return [items, response.hasMore];
-      }
-    } else {
-      console.error(response);
-      throw new Error(response.message ?? undefined);
+    try {
+      this.checkItemsResponse(response, items, statusType);
+    } catch (e: any) {
+      throw new Error(e.message);
     }
-      */
+    return [items!, response.hasMore]; //TODO test this!!!!
+  }
+
+  public async postStatus(request: StatusItemRequest): Promise<void> {
+    const response = await this.clientCommunicator.doPost<
+      StatusItemRequest,
+      TweeterResponse
+    >(request, `/status`);
+
+    this.checkResponse(response, () => {});
   }
 }
