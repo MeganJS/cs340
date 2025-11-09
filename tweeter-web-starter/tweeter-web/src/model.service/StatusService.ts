@@ -1,7 +1,27 @@
 import { AuthToken, Status, FakeData } from "tweeter-shared";
 import { Service } from "./Service";
+import { ServerFacade } from "../network/ServerFacade";
 
 export class StatusService implements Service {
+  private server: ServerFacade = new ServerFacade();
+
+  public async loadMoreStatusItems(
+    authToken: AuthToken,
+    userAlias: string,
+    pageSize: number,
+    lastItem: Status | null
+  ): Promise<[Status[], boolean]> {
+    return await this.server.getMoreFollowItems(
+      {
+        token: authToken.token,
+        alias: userAlias,
+        pageSize: pageSize,
+        lastItem: lastUserItem,
+      },
+      followType
+    );
+  }
+
   public async loadMoreFeedItems(
     authToken: AuthToken,
     userAlias: string,
