@@ -9,19 +9,20 @@ export class StatusService implements Service {
     authToken: AuthToken,
     userAlias: string,
     pageSize: number,
-    lastItem: Status | null
+    lastItem: Status | null,
+    statusType: string
   ): Promise<[Status[], boolean]> {
-    return await this.server.getMoreFollowItems(
+    return await this.server.getMoreStatusItems(
       {
         token: authToken.token,
         alias: userAlias,
         pageSize: pageSize,
-        lastItem: lastUserItem,
+        lastItem: lastItem,
       },
-      followType
+      statusType
     );
   }
-
+  /*
   public async loadMoreFeedItems(
     authToken: AuthToken,
     userAlias: string,
@@ -41,6 +42,7 @@ export class StatusService implements Service {
     // TODO: Replace with the result of calling server
     return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
   }
+    */
 
   public async postStatus(
     authToken: AuthToken,

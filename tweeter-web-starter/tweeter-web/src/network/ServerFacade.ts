@@ -1,9 +1,8 @@
 import {
-  PagedStatusItemRequest,
-  PagedStatusItemResponse,
-  PagedUserItemRequest,
-  PagedUserItemResponse,
+  PagedItemRequest,
+  PagedItemResponse,
   Status,
+  StatusDTO,
   User,
   UserDTO,
 } from "tweeter-shared";
@@ -14,13 +13,31 @@ export class ServerFacade {
     "https://lhk36rmnv5.execute-api.us-west-2.amazonaws.com/dev";
   private clientCommunicator = new ClientCommunicator(this.SERVER_URL);
 
+  public async checkResponse<T, U>(
+    response: PagedItemResponse<T>,
+    items: U[] | null,
+    description: string
+  ): Promise<[U[], boolean]> {
+    // Handle errors
+    if (response.success) {
+      if (items == null) {
+        throw new Error(`No ${description} items found`);
+      } else {
+        return [items, response.hasMore];
+      }
+    } else {
+      console.error(response);
+      throw new Error(response.message ?? undefined);
+    }
+  }
+
   public async getMoreFollowItems(
-    request: PagedUserItemRequest,
+    request: PagedItemRequest<UserDTO>,
     followType: string
   ): Promise<[User[], boolean]> {
     const response = await this.clientCommunicator.doPost<
-      PagedUserItemRequest,
-      PagedUserItemResponse
+      PagedItemRequest<UserDTO>,
+      PagedItemResponse<UserDTO>
     >(request, `/${followType}/list`);
 
     // Convert the UserDTO array returned by ClientCommunicator to a User array
@@ -28,8 +45,9 @@ export class ServerFacade {
       response.success && response.items
         ? response.items.map((dto) => User.fromDTO(dto) as User)
         : null;
-
+    return await this.checkResponse(response, items, followType);
     // Handle errors
+    /*
     if (response.success) {
       if (items == null) {
         throw new Error(`No ${followType}s found`);
@@ -40,15 +58,16 @@ export class ServerFacade {
       console.error(response);
       throw new Error(response.message ?? undefined);
     }
+      */
   }
 
   public async getMoreStatusItems(
-    request: PagedStatusItemRequest,
+    request: PagedItemRequest<StatusDTO>,
     statusType: string
   ): Promise<[Status[], boolean]> {
     const response = await this.clientCommunicator.doPost<
-      PagedStatusItemRequest,
-      PagedStatusItemResponse
+      PagedItemRequest<StatusDTO>,
+      PagedItemResponse<StatusDTO>
     >(request, `/status/${statusType}`);
 
     // Convert the UserDTO array returned by ClientCommunicator to a User array
@@ -57,7 +76,9 @@ export class ServerFacade {
         ? response.items.map((dto) => Status.fromDTO(dto) as Status)
         : null;
 
+    return await this.checkResponse(response, items, statusType);
     // Handle errors
+    /*
     if (response.success) {
       if (items == null) {
         throw new Error(`No ${statusType} items found`);
@@ -68,34 +89,6 @@ export class ServerFacade {
       console.error(response);
       throw new Error(response.message ?? undefined);
     }
+      */
   }
-
-  /*
-  public async getMoreFollowees(
-    request: PagedUserItemRequest
-  ): Promise<[User[], boolean]> {
-    const response = await this.clientCommunicator.doPost<
-      PagedUserItemRequest,
-      PagedUserItemResponse
-    >(request, "/followee/list");
-
-    // Convert the UserDTO array returned by ClientCommunicator to a User array
-    const items: User[] | null =
-      response.success && response.items
-        ? response.items.map((dto) => User.fromDTO(dto) as User)
-        : null;
-
-    // Handle errors
-    if (response.success) {
-      if (items == null) {
-        throw new Error(`No followees found`);
-      } else {
-        return [items, response.hasMore];
-      }
-    } else {
-      console.error(response);
-      throw new Error(response.message ?? undefined);
-    }
-  }
-    */
 }

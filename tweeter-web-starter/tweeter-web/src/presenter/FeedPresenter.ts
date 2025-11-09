@@ -11,11 +11,12 @@ export class FeedPresenter extends StatusItemPresenter {
     authToken: AuthToken,
     userAlias: string
   ): Promise<[Status[], boolean]> {
-    return await this.service.loadMoreFeedItems(
+    return await this.service.loadMoreStatusItems(
       authToken,
       userAlias,
       PAGE_SIZE,
-      this.lastItem
+      this.lastItem,
+      "feed"
     );
   }
 }
