@@ -38,13 +38,6 @@ export class ServerFacade {
         throw new Error(`No ${description} items found`);
       }
     });
-    /*
-    if (response.success) {
-    } else {
-      console.error(response);
-      throw new Error(response.message ?? undefined);
-    }
-      */
   }
 
   private checkAuthResponse(
