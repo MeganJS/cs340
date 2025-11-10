@@ -1,14 +1,20 @@
 import { Buffer } from "buffer";
 import { AuthToken, User, FakeData } from "tweeter-shared";
 import { Service } from "./Service";
+import { ServerFacade } from "../network/ServerFacade";
 
 export class UserService implements Service {
+  private server: ServerFacade = new ServerFacade();
   public async getUser(
     authToken: AuthToken,
     alias: string
   ): Promise<User | null> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias);
+    // return FakeData.instance.findUserByAlias(alias);
+    return await this.server.getUser({
+      token: authToken.token,
+      alias: alias,
+    });
   }
 
   public async login(
@@ -16,18 +22,30 @@ export class UserService implements Service {
     password: string
   ): Promise<[User, AuthToken]> {
     // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
+    // const user = FakeData.instance.firstUser;
 
+    return await this.server.authenticate(
+      { alias: alias, password: password },
+      "login",
+      "Invalid alias or password"
+    );
+    /*
+    return await this.server.login({
+      alias: alias,
+      password: password,
+    });
     if (user === null) {
       throw new Error("Invalid alias or password");
     }
 
-    return [user, FakeData.instance.authToken];
+    return [user, authToken];
+    */
   }
 
   public async logout(authToken: AuthToken): Promise<void> {
     // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    await new Promise((res) => setTimeout(res, 1000));
+    //await new Promise((res) => setTimeout(res, 1000));
+    await this.server.logout({ token: authToken.token });
   }
 
   public async register(
@@ -42,14 +60,26 @@ export class UserService implements Service {
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
 
+    return await this.server.authenticate(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        alias: alias,
+        password: password,
+        userImageBytes: imageStringBase64,
+        imageFileExtension: imageFileExtension,
+      },
+      "register",
+      "Invalid registration"
+    );
+    /*
     // TODO: Replace with the result of calling the server
     const user = FakeData.instance.firstUser;
-
     if (user === null) {
       throw new Error("Invalid registration");
     }
-
     return [user, FakeData.instance.authToken];
+    */
   }
 
   public async unfollow(
