@@ -41,8 +41,7 @@ describe("ServerFacade tests", () => {
       },
       "follower"
     );
-    //server.register();
-    //{"firstName":"Allen","lastName":"Anderson","alias":"@allen","imageUrl":"https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png"}
+
     const expectedUser: User = new User(
       "Allen",
       "Anderson",
@@ -69,8 +68,7 @@ describe("ServerFacade tests", () => {
       },
       "follower"
     );
-    //server.register();
-    //{"firstName":"Allen","lastName":"Anderson","alias":"@allen","imageUrl":"https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png"}
+
     const expectedUser: User = new User(
       "Amy",
       "Ames",
@@ -79,5 +77,20 @@ describe("ServerFacade tests", () => {
     );
     expect(items[0]).toEqual<User>(expectedUser);
     expect(hasMore).toBe(true);
+  });
+
+  test("get followees count", async () => {
+    const user: User = new User(
+      "Allen",
+      "Anderson",
+      "@allen",
+      "https://faculty.cs.byu.edu/~jwilkerson/cs340/tweeter/images/donald_duck.png"
+    );
+    const count = await server.getFollowCount(
+      { token: "token value", user: user.DTO },
+      "followee"
+    );
+    expect(count).toBeGreaterThan(0);
+    expect(count).toBeLessThan(11);
   });
 });
