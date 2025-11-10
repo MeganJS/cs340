@@ -14,12 +14,13 @@ export class FollowService implements Service {
   ): Promise<[User[], boolean]> {
     // TODO: Replace with the result of calling server
     // return FakeData.instance.getPageOfUsers(lastUserItem, pageSize, userAlias);
+
     return await this.server.getMoreFollowItems(
       {
         token: authToken.token,
         alias: userAlias,
         pageSize: pageSize,
-        lastItem: lastUserItem,
+        lastItem: lastUserItem ? lastUserItem.DTO : null,
       },
       followType
     );

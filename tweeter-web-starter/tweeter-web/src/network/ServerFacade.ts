@@ -2,6 +2,7 @@ import {
   AuthRequest,
   AuthResponse,
   AuthToken,
+  FollowActionRequest,
   PagedItemRequest,
   PagedItemResponse,
   RegisterRequest,
@@ -176,6 +177,11 @@ export class ServerFacade {
 
     this.checkResponse(response, () => {});
   }
+  /*
+  public async unfollowUser(
+    request: FollowActionRequest
+  ): Promise<[followerCount: number, followeeCount: number]> {}
+  */
 
   /*
   public async login(request: AuthRequest): Promise<[User, AuthToken]> {

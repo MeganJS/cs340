@@ -17,7 +17,7 @@ export class StatusService implements Service {
         token: authToken.token,
         alias: userAlias,
         pageSize: pageSize,
-        lastItem: lastItem,
+        lastItem: lastItem ? lastItem.DTO : null,
       },
       statusType
     );

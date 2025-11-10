@@ -13,7 +13,7 @@ export abstract class PagedItemPresenter<
   T,
   U extends Service
 > extends Presenter<PagedItemView<T>> {
-  private _lastItem: T | null = null;
+  private _lastItem: T | null;
   private _hasMoreItems: boolean = true;
   private _service: U;
   private userService: UserService = new UserService();
@@ -21,6 +21,7 @@ export abstract class PagedItemPresenter<
   public constructor(view: PagedItemView<T>) {
     super(view);
     this._service = this.serviceFactory();
+    this._lastItem = null;
   }
 
   protected abstract serviceFactory(): U;
