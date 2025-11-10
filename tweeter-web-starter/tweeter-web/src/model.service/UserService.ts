@@ -66,7 +66,7 @@ export class UserService implements Service {
         lastName: lastName,
         alias: alias,
         password: password,
-        userImageBytes: imageStringBase64,
+        imageStringBase64: imageStringBase64,
         imageFileExtension: imageFileExtension,
       },
       "register",
