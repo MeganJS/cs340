@@ -2,7 +2,11 @@ import {
   AuthRequest,
   AuthResponse,
   AuthToken,
+  CheckFollowerRequest,
+  CheckItemResponse,
   FollowActionRequest,
+  FollowActionResponse,
+  FollowCountResponse,
   PagedItemRequest,
   PagedItemResponse,
   RegisterRequest,
@@ -177,11 +181,56 @@ export class ServerFacade {
 
     this.checkResponse(response, () => {});
   }
-  /*
-  public async unfollowUser(
-    request: FollowActionRequest
-  ): Promise<[followerCount: number, followeeCount: number]> {}
-  */
+
+  public async followAction(
+    request: FollowActionRequest,
+    path: string
+  ): Promise<[followerCount: number, followeeCount: number]> {
+    const response = await this.clientCommunicator.doPost<
+      FollowActionRequest,
+      FollowActionResponse
+    >(request, `/user/${path}`);
+
+    try {
+      this.checkResponse(response, () => {}); //TODO consider error checking?
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+    return [response.followerCount, response.followeeCount]; //TODO test this
+  }
+
+  public async getFollowCount(
+    request: FollowActionRequest,
+    path: string
+  ): Promise<number> {
+    const response = await this.clientCommunicator.doPost<
+      FollowActionRequest,
+      FollowCountResponse
+    >(request, `/${path}/count`);
+
+    try {
+      this.checkResponse(response, () => {}); //TODO consider error checking?
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+    return response.count; //TODO test this
+  }
+
+  public async getIsFollowerStatus(
+    request: CheckFollowerRequest
+  ): Promise<boolean> {
+    const response = await this.clientCommunicator.doPost<
+      CheckFollowerRequest,
+      CheckItemResponse
+    >(request, "/user/is_follower");
+
+    try {
+      this.checkResponse(response, () => {}); //TODO consider error checking?
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+    return response.checkResult;
+  }
 
   /*
   public async login(request: AuthRequest): Promise<[User, AuthToken]> {
