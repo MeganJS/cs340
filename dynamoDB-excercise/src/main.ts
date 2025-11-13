@@ -68,6 +68,8 @@ class Main {
       );
       console.log();
 
+      //
+      // get data page of followers
       let dataPageFollowers: DataPage<Follows> =
         await followsDAO.getPageOfFollowers("@Kay", 10, undefined);
 
@@ -75,7 +77,7 @@ class Main {
         console.log(value.toString())
       );
       console.log();
-
+      //second page of followers
       let lastFollowerHandle: string | undefined = "";
       const lastFollower =
         dataPageFollowers.values[dataPageFollowers.values.length - 1];
@@ -96,24 +98,6 @@ class Main {
         console.log(value.toString())
       );
       console.log();
-
-      /*
-      for (let i: number = 0; i < 25; i++) {
-        let follower: User = new User("@Jay", "Jay");
-        let name: string = String.fromCharCode("a".charCodeAt(0) + i);
-        let handle: string = "@" + name;
-        let followee: User = new User(handle, name);
-        await followsDAO.putFollow(follower, followee);
-      }
-
-      for (let i: number = 0; i < 25; i++) {
-        let followee: User = new User("@Kay", "Kay");
-        let name: string = String.fromCharCode("A".charCodeAt(0) + i);
-        let handle: string = "@" + name;
-        let follower: User = new User(handle, name);
-        await followsDAO.putFollow(follower, followee);
-      }
-        */
     } catch (e) {
       console.log(e);
     }

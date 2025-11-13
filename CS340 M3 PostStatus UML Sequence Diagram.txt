@@ -1,0 +1,107 @@
+title Posting a Status
+participant PostStatus
+participant PostStatusView
+participant PostStatusPresenter
+participant StatusService
+participant ServerFacade
+participant ClientCommunicator
+materialdesignicons F0590 API Gateway
+rparticipant PostStatusLambda
+database Server/StatusService
+
+
+entryspacing 0.6
+PostStatus->PostStatusPresenter:submitPost(string, User, AuthToken)
+
+activate PostStatusPresenter
+
+PostStatusPresenter->PostStatusView:setIsLoading(boolean)
+
+activate PostStatusView
+PostStatusView->PostStatus:setIsLoading(boolean)
+deactivate PostStatusView
+activate PostStatus
+space 1
+deactivate PostStatus
+
+
+PostStatusPresenter->PostStatusView:displayInfoMessage(string, number)
+
+activate PostStatusView
+PostStatusView->PostStatus:displayInfoMessage(string, number)
+deactivate PostStatusView
+activate PostStatus
+space 1
+deactivate PostStatus
+
+PostStatusPresenter->PostStatusPresenter: await postStatus(AuthToken, Status)
+
+activate PostStatusPresenter
+
+PostStatusPresenter->StatusService: await postStatus(AuthToken, Status)
+
+activate StatusService
+
+StatusService->ServerFacade: await PostStatus(StatusItemRequest)
+
+activate ServerFacade
+
+ServerFacade->ClientCommunicator: await doPost<StatusItemRequest, TweeterResponse>(PostStatusRequest, string)
+
+activate ClientCommunicator
+
+ClientCommunicator->ClientCommunicator:getUrl(string)
+activate ClientCommunicator
+space 1
+deactivate ClientCommunicator
+ClientCommunicator->ClientCommunicator:getParams(string, Headers, PostStatusRequest)
+activate ClientCommunicator
+space 1
+deactivate ClientCommunicator
+
+ClientCommunicator->API Gateway: await fetch(string, RequestInit)
+activate API Gateway
+API Gateway->PostStatusLambda: PostStatusLambda.handler(StatusItemRequest)
+activate PostStatusLambda
+
+PostStatusLambda->Server/StatusService:await postStatus(string, Status)
+
+activate Server/StatusService
+Server/StatusService-->PostStatusLambda:Promise<void>
+deactivate Server/StatusService
+
+PostStatusLambda-->API Gateway: Promise<TweeterReponse>
+deactivate PostStatusLambda
+
+API Gateway-->ClientCommunicator:Promise<TweeterResponse>
+deactivate API Gateway
+
+ClientCommunicator-->ServerFacade:Promise<TweeterResponse>
+deactivate ClientCommunicator
+
+ServerFacade-->StatusService:Promise<void>
+deactivate ServerFacade
+
+StatusService-->PostStatusPresenter:Promise<void>
+deactivate StatusService
+
+PostStatusPresenter-->PostStatusPresenter:Promise<void>
+deactivate PostStatusPresenter
+
+PostStatusPresenter->PostStatusView:setPost(string) 
+activate PostStatusView
+PostStatusView->PostStatus:setPost(string)
+deactivate PostStatusView
+activate PostStatus
+space 1
+deactivate PostStatus
+
+PostStatusPresenter->PostStatusView:displayInfoMessage(string, number) 
+deactivate PostStatusPresenter
+activate PostStatusView
+PostStatusView->PostStatus:displayInfoMessage(string, number)
+deactivate PostStatusView
+activate PostStatus
+space 1
+deactivate PostStatus
+
