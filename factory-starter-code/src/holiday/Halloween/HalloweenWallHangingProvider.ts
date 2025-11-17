@@ -1,6 +1,7 @@
-export class HalloweenWallHangingProvider {
+import { WallHangingProvider } from "../WallHangingProvider";
 
-    getHanging(): string {
-        return "spider-web";
-    }
+export class HalloweenWallHangingProvider implements WallHangingProvider {
+  getHanging(): string {
+    return "spider-web";
+  }
 }

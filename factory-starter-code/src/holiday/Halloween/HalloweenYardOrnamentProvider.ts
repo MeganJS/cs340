@@ -1,6 +1,7 @@
-export class HalloweenYardOrnamentProvider {
+import { YardOrnamentProvider } from "../YardOrnamentProvider";
 
-    getOrnament(): string {
-        return "jack-o-lantern";
-    }
+export class HalloweenYardOrnamentProvider implements YardOrnamentProvider {
+  getOrnament(): string {
+    return "jack-o-lantern";
+  }
 }
