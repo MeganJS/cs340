@@ -1,15 +1,11 @@
 import { DecorationPlacer } from "./decoration/DecorationPlacer";
-import { HalloweenTableclothPatternProvider } from "./holiday/Halloween/HalloweenTableclothPatternProvider";
-import { HalloweenWallHangingProvider } from "./holiday/Halloween/HalloweenWallHangingProvider";
-import { HalloweenYardOrnamentProvider } from "./holiday/Halloween/HalloweenYardOrnamentProvider";
+import { HalloweenDecorProviderFactory } from "./holiday/Halloween/HalloweenDecorProviderFactory";
 
 main();
 
 function main(): void {
   let decorationPlacer = new DecorationPlacer(
-    new HalloweenTableclothPatternProvider(),
-    new HalloweenWallHangingProvider(),
-    new HalloweenYardOrnamentProvider()
+    new HalloweenDecorProviderFactory()
   );
 
   console.log(decorationPlacer.placeDecorations());
