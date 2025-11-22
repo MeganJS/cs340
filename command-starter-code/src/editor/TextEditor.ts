@@ -1,6 +1,7 @@
 import { IDocument } from "../document/IDocument";
 import * as readline from "readline";
 import { UserInputReader } from "./UserInputReader";
+import { Command } from "../Command";
 
 export class TextEditor {
   private _document: IDocument;
@@ -144,3 +145,11 @@ Your selection: `;
     this._document.open(openFileName);
   }
 }
+
+/*
+class StartCommand implements Command {
+  
+}
+*/
+
+class InsertCommand implements Command {}
