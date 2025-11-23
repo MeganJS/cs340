@@ -2,10 +2,12 @@ import { IDocument } from "../document/IDocument";
 import * as readline from "readline";
 import { UserInputReader } from "./UserInputReader";
 import { Command } from "../Command";
+import { UndoRedoManager } from "../UndoRedoManager";
 
 export class TextEditor {
   private _document: IDocument;
   private consoleReader: readline.Interface;
+  private manager: UndoRedoManager;
 
   constructor(document: IDocument) {
     this._document = document;
@@ -13,6 +15,7 @@ export class TextEditor {
       input: process.stdin,
       output: process.stdout,
     });
+    this.manager = new UndoRedoManager();
   }
 
   public get document(): IDocument {
@@ -30,13 +33,16 @@ export class TextEditor {
           );
           break;
         case 1:
-          this.insert();
+          this.manager.execute(new InsertCommand(this));
+          //this.insert();
           break;
         case 2:
-          this.delete();
+          this.manager.execute(new DeleteCommand(this));
+          //this.delete();
           break;
         case 3:
-          this.replace();
+          this.manager.execute(new ReplaceCommand(this));
+          //this.replace();
           break;
         case 4:
           console.log(this._document.getContents());
@@ -45,15 +51,19 @@ export class TextEditor {
           this.save();
           break;
         case 6:
-          this.open();
+          this.manager.execute(new OpenCommand(this));
+          //this.open();
           break;
         case 7:
-          this._document.clear();
+          this.manager.execute(new StartCommand(this));
+          //this._document.clear();
           break;
         case 8:
+          this.manager.undo();
           console.log("Undo");
           break;
         case 9:
+          this.manager.redo();
           console.log("Redo");
           break;
         case 10:
