@@ -9,5 +9,5 @@ export interface UserDAO {
     password: string,
     imageStringBase64: string,
     imageFileExtension: string
-  ): Promise<[UserDTO, AuthTokenDTO]>;
+  ): Promise<UserDTO>;
 }
