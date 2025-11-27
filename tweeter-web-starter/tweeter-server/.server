@@ -1,17 +1,17 @@
 BUCKET='cs340-tweeter-247'
 LAMBDA_ROLE='arn:aws:iam::649209434077:role/cs340-tweeter-service'
 EDIT_LAMBDALIST='
-tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
-tweeterGetFollowers | lambda/follow/GetFollowersLambda.handler
 tweeterGetUser | lambda/user/GetUserLambda.handler
 tweeterLogin | lambda/user/LoginLambda.handler
 tweeterRegister | lambda/user/RegisterLambda.handler
 tweeterLogout | lambda/user/LogoutLambda.handler
-tweeterUnfollowUser | lambda/user/UnfollowUserLambda.handler
-tweeterFollowUser | lambda/user/FollowUserLambda.handler
-tweeterGetFolloweeCount | lambda/user/GetFolloweeCountLambda.handler
-tweeterGetFollowerCount | lambda/user/GetFollowerCountLambda.handler
-tweeterGetIsFollowerStatus | lambda/user/GetIsFollowerStatusLambda.handler
+tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
+tweeterGetFollowers | lambda/follow/GetFollowersLambda.handler
+tweeterUnfollowUser | lambda/follow/UnfollowUserLambda.handler
+tweeterFollowUser | lambda/follow/FollowUserLambda.handler
+tweeterGetFolloweeCount | lambda/follow/GetFolloweeCountLambda.handler
+tweeterGetFollowerCount | lambda/follow/GetFollowerCountLambda.handler
+tweeterGetIsFollowerStatus | lambda/follow/GetIsFollowerStatusLambda.handler
 tweeterGetStoryItems | lambda/status/GetStoryItemsLambda.handler
 tweeterGetFeedItems | lambda/status/GetFeedItemsLambda.handler
 tweeterPostStatus | lambda/status/PostStatusLambda.handler

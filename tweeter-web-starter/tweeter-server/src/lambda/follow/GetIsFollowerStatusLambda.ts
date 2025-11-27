@@ -1,12 +1,13 @@
 import { CheckFollowerRequest, CheckItemResponse } from "tweeter-shared";
-import { UserService } from "../../model/service/UserService";
+import { FollowService } from "../../model/service/FollowService";
+import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 
 export const handler = async (
   request: CheckFollowerRequest
 ): Promise<CheckItemResponse> => {
-  const userService: UserService = new UserService();
+  const followService: FollowService = new FollowService(new DAOFactoryImpl());
 
-  const checkResult = await userService.getIsFollowerStatus(
+  const checkResult = await followService.getIsFollowerStatus(
     request.token,
     request.user,
     request.selectedUser

@@ -1,10 +1,11 @@
 import { PagedItemRequest, PagedItemResponse, UserDTO } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
+import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 
 export const handler = async (
   request: PagedItemRequest<UserDTO>
 ): Promise<PagedItemResponse<UserDTO>> => {
-  const followService = new FollowService();
+  const followService = new FollowService(new DAOFactoryImpl());
   const [items, hasMore] = await followService.loadMoreFollowers(
     request.token,
     request.alias,

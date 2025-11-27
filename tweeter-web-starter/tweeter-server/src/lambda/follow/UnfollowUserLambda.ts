@@ -1,12 +1,13 @@
 import { FollowActionRequest, FollowActionResponse } from "tweeter-shared";
-import { UserService } from "../../model/service/UserService";
+import { FollowService } from "../../model/service/FollowService";
+import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 
 export const handler = async (
   request: FollowActionRequest
 ): Promise<FollowActionResponse> => {
-  const userService: UserService = new UserService();
+  const followService: FollowService = new FollowService(new DAOFactoryImpl());
 
-  const [followerCount, followeeCount] = await userService.follow(
+  const [followerCount, followeeCount] = await followService.unfollow(
     request.token,
     request.user
   );
