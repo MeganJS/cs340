@@ -2,16 +2,23 @@ import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { FollowDAO } from "./FollowDAO";
 import { UserDTO } from "tweeter-shared";
-import { DAO } from "./DataDAO";
+import { DataDAO } from "./DataDAO";
 
-export class FollowDAOImpl extends DAO implements FollowDAO {
+export class FollowDAOImpl implements FollowDAO {
   //private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
-  readonly tableName = "follows";
-  readonly indexName = "follows_index";
-  readonly followerAttr = "follower_handle";
-  readonly followerDTO = "follower_dto";
-  readonly followeeAttr = "followee_handle";
-  readonly followeeDTO = "followee_dto";
+  private readonly tableDAO: DataDAO;
+  private readonly fileDAO: DataDAO;
+  private readonly tableName = "follows";
+  private readonly indexName = "follows_index";
+  private readonly followerAttr = "follower_handle";
+  private readonly followerDTO = "follower_dto";
+  private readonly followeeAttr = "followee_handle";
+  private readonly followeeDTO = "followee_dto";
+
+  constructor(tables: DataDAO, files: DataDAO) {
+    this.tableDAO = tables;
+    this.fileDAO = files;
+  }
 
   async putFollow(follower: UserDTO, followee: UserDTO) {
     const params = {
@@ -23,7 +30,8 @@ export class FollowDAOImpl extends DAO implements FollowDAO {
         [this.followeeDTO]: JSON.stringify(followee),
       },
     };
-    await this.client.send(new PutCommand(params));
+    await this.tableDAO.putData(params);
+    //await this.client.send(new PutCommand(params));
   }
 
   /*
