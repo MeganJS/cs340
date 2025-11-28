@@ -1,12 +1,21 @@
 import { Buffer } from "buffer";
 import { FakeData, UserDTO, AuthTokenDTO } from "tweeter-shared";
 import { Service } from "./Service";
+import { UserDAO } from "../DAO/UserDAO";
+import { DAOFactory } from "../DAO/DAOFactory";
 
 export class UserService implements Service {
+  private userDAO: UserDAO;
+
+  constructor(daoFactory: DAOFactory) {
+    this.userDAO = daoFactory.userDAO;
+  }
+
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
     // TODO: Replace with the result of calling server
-    const user = FakeData.instance.findUserByAlias(alias);
-    return user == null ? null : user.DTO;
+    //const user = FakeData.instance.findUserByAlias(alias);
+    const user = await this.userDAO.getUser(alias);
+    return user == null ? null : user;
   }
 
   public async login(
