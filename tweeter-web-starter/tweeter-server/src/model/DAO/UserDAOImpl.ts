@@ -1,0 +1,55 @@
+import { UserDTO } from "tweeter-shared";
+import { UserDAO } from "./UserDAO";
+import { DataDAO } from "./DataDAO";
+
+export class UserDAOImpl implements UserDAO {
+  private readonly tableDAO: DataDAO;
+  private readonly fileDAO: DataDAO;
+  private readonly tableName = "users";
+  private readonly userAttr = "user_alias";
+  private readonly userFirstNameAttr = "user_firstname";
+  private readonly userLastNameAttr = "user_lastname";
+  private readonly userImageAttr = "user_imageUrl";
+
+  constructor(tables: DataDAO, files: DataDAO) {
+    this.tableDAO = tables;
+    this.fileDAO = files;
+  }
+
+  async getUser(alias: string): Promise<UserDTO | null> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        [this.userAttr]: alias,
+      },
+    };
+
+    const output = await this.tableDAO.getData(params);
+    return output.Item == undefined
+      ? null
+      : {
+          firstName: output.Item[this.userFirstNameAttr],
+          lastName: output.Item[this.userLastNameAttr],
+          alias: output.Item[this.userAttr],
+          imageUrl: output.Item[this.userImageAttr],
+        };
+  }
+
+  async putUser(
+    firstName: string,
+    lastName: string,
+    alias: string,
+    imageUrl: string
+  ): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Item: {
+        [this.userAttr]: alias,
+        [this.userFirstNameAttr]: firstName,
+        [this.userLastNameAttr]: lastName,
+        [this.userImageAttr]: imageUrl,
+      },
+    };
+    await this.tableDAO.putData(params);
+  }
+}
