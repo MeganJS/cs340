@@ -49,7 +49,8 @@ export class FollowService implements Service {
     userToUnfollow: UserDTO
   ): Promise<[followerCount: number, followeeCount: number]> {
     // Pause so we can see the unfollow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    // await new Promise((f) => setTimeout(f, 2000));
+    await this.followDAO.deleteFollow("@arnold", userToUnfollow.alias);
 
     // TODO: Call the server
     const followerCount = await this.getFollowerCount(token, userToUnfollow);
