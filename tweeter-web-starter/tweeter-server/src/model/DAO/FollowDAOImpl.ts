@@ -11,26 +11,36 @@ export class FollowDAOImpl implements FollowDAO {
   private readonly tableName = "follows";
   private readonly indexName = "follows_index";
   private readonly followerAttr = "follower_handle";
-  private readonly followerDTO = "follower_dto";
+  //private readonly followerDTO = "follower_dto";
   private readonly followeeAttr = "followee_handle";
-  private readonly followeeDTO = "followee_dto";
+  //private readonly followeeDTO = "followee_dto";
 
   constructor(tables: DataDAO, files: DataDAO) {
     this.tableDAO = tables;
     this.fileDAO = files;
   }
 
-  async putFollow(follower: UserDTO, followee: UserDTO) {
+  async putFollow(followerAlias: string, followeeAlias: string) {
     const params = {
       TableName: this.tableName,
       Item: {
-        [this.followerAttr]: follower.alias,
-        [this.followerDTO]: JSON.stringify(follower),
-        [this.followeeAttr]: followee.alias,
-        [this.followeeDTO]: JSON.stringify(followee),
+        [this.followerAttr]: followerAlias,
+        [this.followeeAttr]: followeeAlias,
       },
     };
     await this.tableDAO.putData(params);
+    //await this.client.send(new PutCommand(params));
+  }
+
+  async deleteFollow(followerAlias: string, followeeAlias: string) {
+    const params = {
+      TableName: this.tableName,
+      Item: {
+        [this.followerAttr]: followerAlias,
+        [this.followeeAttr]: followeeAlias,
+      },
+    };
+    await this.tableDAO.deleteData(params);
     //await this.client.send(new PutCommand(params));
   }
 

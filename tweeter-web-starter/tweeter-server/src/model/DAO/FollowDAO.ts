@@ -15,12 +15,10 @@ export interface FollowDAO {
     userAlias: string
   ): Promise<[UserDTO[], boolean]>;
   */
-  putFollow(user: UserDTO, userToFollow: UserDTO): Promise<void>;
+  putFollow(userAlias: string, userToFollowAlias: string): Promise<void>;
+
+  deleteFollow(userAlias: string, userToUnfollowAlias: string): Promise<void>;
   /*
-  deleteFollow(
-    token: string,
-    userToUnfollow: UserDTO
-  ): Promise<[followerCount: number, followeeCount: number]>;
   getFollowerStatus(
     token: string,
     user: UserDTO,

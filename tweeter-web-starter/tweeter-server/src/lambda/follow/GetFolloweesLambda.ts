@@ -5,7 +5,7 @@ import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 export const handler = async (
   request: PagedItemRequest<UserDTO>
 ): Promise<PagedItemResponse<UserDTO>> => {
-  const followService = new FollowService(new DAOFactoryImpl()); //TODO is correct???
+  const followService = new FollowService(DAOFactoryImpl.instance); //TODO is correct???
   const [items, hasMore] = await followService.loadMoreFollowees(
     request.token,
     request.alias,

@@ -63,7 +63,8 @@ export class FollowService implements Service {
     userToFollow: UserDTO
   ): Promise<[followerCount: number, followeeCount: number]> {
     // Pause so we can see the follow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    //await new Promise((f) => setTimeout(f, 2000));
+    await this.followDAO.putFollow("@arnold", userToFollow.alias);
 
     // TODO: Call the server
     const followerCount = await this.getFollowerCount(token, userToFollow);

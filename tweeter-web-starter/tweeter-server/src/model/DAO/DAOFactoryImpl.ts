@@ -12,13 +12,25 @@ export class DAOFactoryImpl implements DAOFactory {
   //public statusDAO: StatusDAO;
   //public userDAO: UserDAO;
   //public authDAO: AuthDAO;
-  private dynamoDAO = new DynamoDbDAO();
-  private s3DAO = new S3DAO();
+  //private dynamoDAO = new DynamoDbDAO();
+  //private s3DAO = new S3DAO();
+  static _instance: DAOFactoryImpl;
 
   constructor() {
-    this.followDAO = new FollowDAOImpl(this.dynamoDAO, this.s3DAO);
+    this.followDAO = new FollowDAOImpl(new DynamoDbDAO(), new S3DAO());
     //this.userDAO = new UserDAOImpl(this.dynamoDAO, this.s3DAO);
     //this.statusDAO = new StatusDAOImpl(this.dynamoDAO, this.s3DAO);
     //this.authDAO = new AuthDAOImpl(this.dynamoDAO, this.s3DAO);
+  }
+
+  public static get instance(): DAOFactoryImpl {
+    if (!DAOFactoryImpl._instance) {
+      DAOFactoryImpl._instance = new DAOFactoryImpl();
+    }
+    return DAOFactoryImpl._instance;
+  }
+
+  public static set instance(ins: DAOFactoryImpl) {
+    DAOFactoryImpl._instance = ins;
   }
 }

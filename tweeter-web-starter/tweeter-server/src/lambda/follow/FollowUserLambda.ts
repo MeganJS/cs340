@@ -5,7 +5,9 @@ import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 export const handler = async (
   request: FollowActionRequest
 ): Promise<FollowActionResponse> => {
-  const followService: FollowService = new FollowService(new DAOFactoryImpl());
+  const followService: FollowService = new FollowService(
+    DAOFactoryImpl.instance
+  );
 
   const [followerCount, followeeCount] = await followService.follow(
     request.token,

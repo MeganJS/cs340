@@ -47,7 +47,7 @@ export class UserService implements Service {
     }
     return [user.DTO, FakeData.instance.authToken.DTO];
   }
-
+  /*
   public async unfollow(
     token: string,
     userToUnfollow: UserDTO
@@ -94,4 +94,5 @@ export class UserService implements Service {
     // TODO: Replace with the result of calling server
     return FakeData.instance.isFollower();
   }
+    */
 }
