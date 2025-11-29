@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import { FakeData, UserDTO, AuthTokenDTO, AuthToken } from "tweeter-shared";
 import { Service } from "./Service";
 import { UserDAO } from "../DAO/UserDAO";
@@ -17,9 +16,9 @@ export class UserService implements Service {
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
     // TODO: Replace with the result of calling server
-    const user = FakeData.instance.findUserByAlias(alias);
-    //const user = await this.userDAO.getUser(alias);
-    return user == null ? null : user.DTO;
+    //const user = FakeData.instance.findUserByAlias(alias);
+    const user = await this.userDAO.getUser(alias);
+    return user == null ? null : user;
   }
 
   public async login(
@@ -49,13 +48,14 @@ export class UserService implements Service {
     }
 
     const user = await this.userDAO.getUser(alias);
-    if (user == null) {
+    if (typeof user == "undefined") {
       throw new Error("Invalid alias or password");
     }
 
     //create new authToken and put in session with timestamp
     const authToken = AuthToken.Generate();
     //TODO!!!
+    //check if the user already has an authToken. If so, replace it with this one.
 
     //const user = FakeData.instance.firstUser;
     return [user, authToken.DTO];
@@ -80,11 +80,12 @@ export class UserService implements Service {
 
     // TODO: Replace with the result of calling the server
     //const user = FakeData.instance.firstUser;
-    const userCheck = this.userDAO.getUser(alias);
+    const userCheck = await this.userDAO.getUser(alias);
 
-    if (userCheck != null) {
+    if (typeof userCheck != "undefined") {
       throw new Error("Alias already in use");
     }
+
     //TODO insert image into s3, get URL
     const imageUrl = "haven't done this yet";
     this.userDAO.putUser(firstName, lastName, alias, imageUrl);

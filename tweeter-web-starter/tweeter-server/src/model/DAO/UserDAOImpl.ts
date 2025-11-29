@@ -16,7 +16,7 @@ export class UserDAOImpl implements UserDAO {
     this.fileDAO = files;
   }
 
-  async getUser(alias: string): Promise<UserDTO | null> {
+  async getUser(alias: string): Promise<UserDTO | undefined> {
     const params = {
       TableName: this.tableName,
       Key: {
@@ -26,7 +26,7 @@ export class UserDAOImpl implements UserDAO {
 
     const output = await this.tableDAO.getData(params);
     return output.Item == undefined
-      ? null
+      ? undefined
       : {
           firstName: output.Item[this.userFirstNameAttr],
           lastName: output.Item[this.userLastNameAttr],
