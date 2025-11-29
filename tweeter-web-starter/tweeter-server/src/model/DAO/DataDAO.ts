@@ -1,5 +1,5 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+export const BUCKET: string = "cs340-tweeter-247";
+export const REGION: string = "us-west-2";
 
 export interface DataDAO {
   putData(requestParams: any): Promise<void>;

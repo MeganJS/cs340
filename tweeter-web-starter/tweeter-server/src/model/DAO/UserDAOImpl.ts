@@ -1,6 +1,7 @@
 import { UserDTO } from "tweeter-shared";
 import { UserDAO } from "./UserDAO";
-import { DataDAO } from "./DataDAO";
+import { BUCKET, DataDAO, REGION } from "./DataDAO";
+import { ObjectCannedACL } from "@aws-sdk/client-s3";
 
 export class UserDAOImpl implements UserDAO {
   private readonly tableDAO: DataDAO;
@@ -51,5 +52,23 @@ export class UserDAOImpl implements UserDAO {
       },
     };
     await this.tableDAO.putData(params);
+  }
+
+  async putUserImage(imageStringBase64: string, imageFileExtension: string) {
+    let decodedImageBuffer: Buffer = Buffer.from(imageStringBase64, "base64");
+
+    const s3Params = {
+      Bucket: BUCKET,
+      Key: "image/" + imageFileExtension,
+      Body: decodedImageBuffer,
+      ContentType: "image/png",
+      ACL: ObjectCannedACL.public_read,
+    };
+    try {
+      await this.fileDAO.putData(s3Params);
+      return `https://${BUCKET}.s3.${REGION}.amazonaws.com/image/${imageFileExtension}`; //TODO make sure this data is safe
+    } catch (e) {
+      throw Error("s3 put image failed with: " + e);
+    }
   }
 }
