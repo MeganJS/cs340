@@ -1,8 +1,9 @@
 import { Buffer } from "buffer";
-import { FakeData, UserDTO, AuthTokenDTO } from "tweeter-shared";
+import { FakeData, UserDTO, AuthTokenDTO, AuthToken } from "tweeter-shared";
 import { Service } from "./Service";
 import { UserDAO } from "../DAO/UserDAO";
 import { DAOFactory } from "../DAO/DAOFactory";
+import bcrypt from "bcryptjs";
 
 export class UserService implements Service {
   private userDAO: UserDAO;
@@ -13,9 +14,9 @@ export class UserService implements Service {
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
     // TODO: Replace with the result of calling server
-    //const user = FakeData.instance.findUserByAlias(alias);
-    const user = await this.userDAO.getUser(alias);
-    return user == null ? null : user;
+    const user = FakeData.instance.findUserByAlias(alias);
+    //const user = await this.userDAO.getUser(alias);
+    return user == null ? null : user.DTO;
   }
 
   public async login(
@@ -23,6 +24,13 @@ export class UserService implements Service {
     password: string
   ): Promise<[UserDTO, AuthTokenDTO]> {
     // TODO: Replace with the result of calling the server
+
+    //steps:
+    //get stored salt for username
+    //append it to password
+    //hash
+    //compare our hash with stored hash
+
     const user = FakeData.instance.firstUser;
 
     if (user === null) {
@@ -50,12 +58,34 @@ export class UserService implements Service {
     //  Buffer.from(userImageBytes).toString("base64");
 
     // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-    if (user === null) {
-      throw new Error("Invalid registration");
+    //const user = FakeData.instance.firstUser;
+    const userCheck = this.userDAO.getUser(alias);
+
+    if (userCheck != null) {
+      throw new Error("Alias already in use");
     }
-    return [user.DTO, FakeData.instance.authToken.DTO];
+    //TODO insert image into s3, get URL
+    const imageUrl = "haven't done this yet";
+    this.userDAO.putUser(firstName, lastName, alias, imageUrl);
+
+    //get random salt, append to password, hash password, put in auth table
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+
+    //create new authToken and put in session with timestamp
+    const authToken = AuthToken.Generate();
+
+    //return created user (get from database or no?)
+    const user = {
+      firstName: firstName,
+      lastName: lastName,
+      alias: alias,
+      imageUrl: imageUrl,
+    };
+
+    return [user, authToken.DTO];
   }
+
   /*
   public async unfollow(
     token: string,
