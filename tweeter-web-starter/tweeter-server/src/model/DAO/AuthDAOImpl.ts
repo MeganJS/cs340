@@ -62,7 +62,7 @@ export class AuthDAOImpl implements AuthDAO {
   async deleteToken(token: string): Promise<void> {
     const params = {
       TableName: this.sessTableName,
-      Item: {
+      Key: {
         [this.sessTokenAttr]: token,
       },
     };
