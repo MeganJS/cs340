@@ -4,12 +4,15 @@ import { Service } from "./Service";
 import { UserDAO } from "../DAO/UserDAO";
 import { DAOFactory } from "../DAO/DAOFactory";
 import bcrypt from "bcryptjs";
+import { AuthDAO } from "../DAO/AuthDAO";
 
 export class UserService implements Service {
   private userDAO: UserDAO;
+  private authDAO: AuthDAO;
 
   constructor(daoFactory: DAOFactory) {
     this.userDAO = daoFactory.userDAO;
+    this.authDAO = daoFactory.authDAO;
   }
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
@@ -30,14 +33,32 @@ export class UserService implements Service {
     //append it to password
     //hash
     //compare our hash with stored hash
+    const authInfo = await this.authDAO.getAuthInfo(alias);
 
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
+    if (authInfo === null) {
       throw new Error("Invalid alias or password");
     }
 
-    return [user.DTO, FakeData.instance.authToken.DTO];
+    //const salt = authInfo[0];
+    const hash = authInfo[1];
+    //const hashPass = bcrypt.hashSync(password, salt);
+
+    if (!bcrypt.compareSync(password, hash)) {
+      //TOdo check if correct???
+      throw new Error("Invalid alias or password");
+    }
+
+    const user = await this.userDAO.getUser(alias);
+    if (user == null) {
+      throw new Error("Invalid alias or password");
+    }
+
+    //create new authToken and put in session with timestamp
+    const authToken = AuthToken.Generate();
+    //TODO!!!
+
+    //const user = FakeData.instance.firstUser;
+    return [user, authToken.DTO];
   }
 
   public async logout(token: string): Promise<void> {
@@ -69,11 +90,13 @@ export class UserService implements Service {
     this.userDAO.putUser(firstName, lastName, alias, imageUrl);
 
     //get random salt, append to password, hash password, put in auth table
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    await this.authDAO.putAuthInfo(alias, salt, hash);
 
     //create new authToken and put in session with timestamp
     const authToken = AuthToken.Generate();
+    //TODO!!!
 
     //return created user (get from database or no?)
     const user = {

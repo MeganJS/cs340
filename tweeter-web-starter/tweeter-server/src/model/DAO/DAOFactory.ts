@@ -7,5 +7,5 @@ export interface DAOFactory {
   followDAO: FollowDAO;
   //statusDAO: StatusDAO;
   userDAO: UserDAO;
-  //authDAO: AuthDAO;
+  authDAO: AuthDAO;
 }
