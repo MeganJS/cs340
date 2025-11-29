@@ -53,17 +53,25 @@ export class UserService implements Service {
     }
 
     //create new authToken and put in session with timestamp
-    const authToken = AuthToken.Generate();
+    /*
+    const checkToken = await this.authDAO.getToken(alias);
+    if (typeof checkToken != "undefined") {
+      await this.authDAO.deleteToken(checkToken.token);
+    }
+    */
+    const authToken = AuthToken.Generate().DTO;
+    await this.authDAO.putToken(alias, authToken);
     //TODO!!!
     //check if the user already has an authToken. If so, replace it with this one.
 
     //const user = FakeData.instance.firstUser;
-    return [user, authToken.DTO];
+    return [user, authToken];
   }
 
   public async logout(token: string): Promise<void> {
     // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    await new Promise((res) => setTimeout(res, 1000));
+    //await new Promise((res) => setTimeout(res, 1000));
+    await this.authDAO.deleteToken(token);
   }
 
   public async register(
@@ -78,7 +86,6 @@ export class UserService implements Service {
     //const imageStringBase64: string =
     //  Buffer.from(userImageBytes).toString("base64");
 
-    // TODO: Replace with the result of calling the server
     //const user = FakeData.instance.firstUser;
     const userCheck = await this.userDAO.getUser(alias);
 
@@ -86,17 +93,25 @@ export class UserService implements Service {
       throw new Error("Alias already in use");
     }
 
-    //TODO insert image into s3, get URL
-    const imageUrl = "haven't done this yet";
-    this.userDAO.putUser(firstName, lastName, alias, imageUrl);
-
     //get random salt, append to password, hash password, put in auth table
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
     await this.authDAO.putAuthInfo(alias, salt, hash);
 
+    //TODO insert image into s3, get URL
+    const imageUrl = "haven't done this yet";
+    await this.userDAO.putUser(firstName, lastName, alias, imageUrl);
+
     //create new authToken and put in session with timestamp
-    const authToken = AuthToken.Generate();
+    /*
+    const checkToken = await this.authDAO.getToken(alias);
+    if (typeof checkToken != "undefined") {
+      await this.authDAO.deleteToken(checkToken.token);
+    }
+      */
+
+    const authToken = AuthToken.Generate().DTO;
+    await this.authDAO.putToken(alias, authToken);
     //TODO!!!
 
     //return created user (get from database or no?)
@@ -107,7 +122,7 @@ export class UserService implements Service {
       imageUrl: imageUrl,
     };
 
-    return [user, authToken.DTO];
+    return [user, authToken];
   }
 
   /*

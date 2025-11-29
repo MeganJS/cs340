@@ -10,11 +10,25 @@ import {
   PutObjectCommand,
   PutObjectCommandInput,
   PutObjectRequest,
+  RenameObjectCommand,
+  RenameObjectRequest,
   S3Client,
 } from "@aws-sdk/client-s3";
 
 export class S3DAO implements DataDAO {
-  protected readonly client = new S3Client();
+  static _instance: S3DAO;
+  private readonly client: S3Client;
+
+  constructor() {
+    this.client = new S3Client();
+  }
+
+  static get instance() {
+    if (!S3DAO._instance) {
+      S3DAO._instance = new S3DAO();
+    }
+    return S3DAO._instance;
+  }
 
   async putData(requestParams: PutObjectRequest): Promise<void> {
     await this.client.send(new PutObjectCommand(requestParams));
@@ -28,9 +42,8 @@ export class S3DAO implements DataDAO {
     //const output = await this.client.send(new GetCommand(params));
     return await this.client.send(new GetObjectCommand(requestParams));
   }
-  /*
-  async updateData(requestParams: UpdateObjectRequest): Promise<void> {
-    await this.client.send(new UpdateObjectCommand(requestParams));
+
+  async updateData(requestParams: RenameObjectRequest): Promise<void> {
+    await this.client.send(new RenameObjectCommand(requestParams));
   }
-    */
 }

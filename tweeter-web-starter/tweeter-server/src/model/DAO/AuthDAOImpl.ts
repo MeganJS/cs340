@@ -4,20 +4,21 @@ import { DataDAO } from "./DataDAO";
 
 export class AuthDAOImpl implements AuthDAO {
   private readonly tableDAO: DataDAO;
-  private readonly fileDAO: DataDAO;
+  //private readonly fileDAO: DataDAO;
   private readonly authTableName = "auth";
   private readonly authAttr = "alias";
   private readonly authHashAttr = "hash";
   private readonly authSaltAttr = "salt";
 
-  private readonly sessTableName = "sessons";
+  private readonly sessTableName = "sessions";
+  private readonly sessIndexName = "alias_index";
   private readonly sessTokenAttr = "token";
-  private readonly sessAliasAttr = "user_alias";
-  private readonly sessTimeAttr = "token_date_time";
+  private readonly sessAliasAttr = "alias";
+  private readonly sessTimeAttr = "date_time";
 
-  constructor(tables: DataDAO, files: DataDAO) {
+  constructor(tables: DataDAO) {
     this.tableDAO = tables;
-    this.fileDAO = files;
+    //this.fileDAO = files;
   }
 
   async putAuthInfo(alias: string, salt: string, hash: string): Promise<void> {
@@ -46,6 +47,88 @@ export class AuthDAOImpl implements AuthDAO {
       : [output.Item[this.authSaltAttr], output.Item[this.authHashAttr]];
   }
 
-  //deleteToken(token: string): Promise<void>;
-  //putToken(alias: string, password: string): Promise<[UserDTO, AuthTokenDTO]>;
+  async putToken(alias: string, authToken: AuthTokenDTO): Promise<void> {
+    const params = {
+      TableName: this.sessTableName,
+      Item: {
+        [this.sessTokenAttr]: authToken.token,
+        [this.sessTimeAttr]: authToken.timestamp,
+        [this.sessAliasAttr]: alias,
+      },
+    };
+    await this.tableDAO.putData(params);
+  }
+
+  async deleteToken(token: string): Promise<void> {
+    const params = {
+      TableName: this.sessTableName,
+      Item: {
+        [this.sessTokenAttr]: token,
+      },
+    };
+    await this.tableDAO.deleteData(params);
+  }
+
+  async getTokenTime(token: string): Promise<AuthTokenDTO | undefined> {
+    const params = {
+      TableName: this.sessTableName,
+      Key: {
+        [this.sessTokenAttr]: token,
+      },
+    };
+
+    const output = await this.tableDAO.getData(params);
+    return output.Item == undefined
+      ? undefined
+      : {
+          token: output.Item[this.sessTokenAttr],
+          timestamp: output.Item[this.sessTimeAttr],
+        };
+  }
+
+  async getTokenAlias(token: string): Promise<string | undefined> {
+    const params = {
+      TableName: this.sessTableName,
+      Key: {
+        [this.sessTokenAttr]: token,
+      },
+    };
+
+    const output = await this.tableDAO.getData(params);
+    return output.Item == undefined
+      ? undefined
+      : output.Item[this.sessAliasAttr];
+  }
+  /*
+  async getToken(alias: string): Promise<AuthTokenDTO | undefined> {
+    const params = {
+      TableName: this.sessTableName,
+      IndexName: this.sessIndexName,
+
+      Key: {
+        [this.sessAliasAttr]: alias,
+      },
+    };
+    const output = await this.tableDAO.getData(params);
+    return output.Item == undefined
+      ? undefined
+      : {
+          token: output.Item[this.sessTokenAttr],
+          timestamp: output.Item[this.sessTimeAttr],
+        };
+  }
+*/
+  async updateTime(token: string, timestamp: number): Promise<void> {
+    const params = {
+      TableName: this.sessTableName,
+      Key: {
+        [this.sessTokenAttr]: token,
+      },
+      ExpressionAttributeValues: {
+        ":date_time": timestamp,
+      },
+      UpdateExpression: "SET " + this.sessTimeAttr + " = " + ":date_time",
+    };
+    await this.tableDAO.updateData(params);
+  }
 }

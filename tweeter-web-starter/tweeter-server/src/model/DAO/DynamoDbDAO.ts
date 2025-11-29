@@ -14,7 +14,19 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DataDAO } from "./DataDAO";
 
 export class DynamoDbDAO implements DataDAO {
-  protected readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
+  private readonly client: DynamoDBClient;
+  static _instance: DynamoDbDAO;
+
+  constructor() {
+    this.client = DynamoDBDocumentClient.from(new DynamoDBClient());
+  }
+
+  static get instance() {
+    if (!DynamoDbDAO._instance) {
+      DynamoDbDAO._instance = new DynamoDbDAO();
+    }
+    return DynamoDbDAO._instance;
+  }
 
   async putData(requestParams: PutCommandInput): Promise<void> {
     await this.client.send(new PutCommand(requestParams));
@@ -28,9 +40,8 @@ export class DynamoDbDAO implements DataDAO {
     //const output = await this.client.send(new GetCommand(params));
     return await this.client.send(new GetCommand(requestParams));
   }
-  /*
+
   async updateData(requestParams: UpdateCommandInput): Promise<void> {
     await this.client.send(new UpdateCommand(requestParams));
   }
-    */
 }
