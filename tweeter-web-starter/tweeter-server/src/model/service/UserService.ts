@@ -4,17 +4,21 @@ import { UserDAO } from "../DAO/UserDAO";
 import { DAOFactory } from "../DAO/DAOFactory";
 import bcrypt from "bcryptjs";
 import { AuthDAO } from "../DAO/AuthDAO";
+import { AuthenticationService } from "./AuthenticationService";
 
-export class UserService implements Service {
+export class UserService extends AuthenticationService implements Service {
   private userDAO: UserDAO;
-  private authDAO: AuthDAO;
+  //private authDAO: AuthDAO;
 
   constructor(daoFactory: DAOFactory) {
+    super(daoFactory);
     this.userDAO = daoFactory.userDAO;
-    this.authDAO = daoFactory.authDAO;
+    //this.authDAO = daoFactory.authDAO;
   }
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
+    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+
     const user = await this.userDAO.getUser(alias);
     return user == null ? null : user;
   }
@@ -143,7 +147,7 @@ export class UserService implements Service {
     return [followerCount, followeeCount];
   }
     */
-
+  /*
   public async getFolloweeCount(token: string, user: UserDTO): Promise<number> {
     // TODO: Replace with the result of calling server
     return FakeData.instance.getFolloweeCount(user.alias);
@@ -153,6 +157,7 @@ export class UserService implements Service {
     // TODO: Replace with the result of calling server
     return FakeData.instance.getFollowerCount(user.alias);
   }
+    */
   /*
   public async getIsFollowerStatus(
     token: string,

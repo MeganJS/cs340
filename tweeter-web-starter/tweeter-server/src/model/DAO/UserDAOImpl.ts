@@ -11,6 +11,8 @@ export class UserDAOImpl implements UserDAO {
   private readonly userFirstNameAttr = "user_firstname";
   private readonly userLastNameAttr = "user_lastname";
   private readonly userImageAttr = "user_imageUrl";
+  private readonly userFollowersAttr = "num_followers";
+  private readonly userFolloweesAttr = "num_followees";
 
   constructor(tables: DataDAO, files: DataDAO) {
     this.tableDAO = tables;
@@ -36,6 +38,58 @@ export class UserDAOImpl implements UserDAO {
         };
   }
 
+  async getUserFollowCounts(
+    alias: string
+  ): Promise<[followerCount: number, followeeCount: number] | undefined> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        [this.userAttr]: alias,
+      },
+    };
+
+    const output = await this.tableDAO.getData(params);
+    return output.Item == undefined
+      ? undefined
+      : [
+          output.Item[this.userFollowersAttr],
+          output.Item[this.userFolloweesAttr],
+        ];
+  }
+
+  async updateUserFollowCount(
+    alias: string,
+    add_amount: number,
+    attribute: string
+  ): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Key: {
+        [this.userAttr]: alias,
+      },
+      ExpressionAttributeValues: {
+        ":inc": add_amount,
+      },
+      UpdateExpression: "SET " + attribute + " = " + attribute + ":inc",
+    };
+    await this.tableDAO.updateData(params);
+  }
+
+  //TODO reduce duplication here!!!
+  async updateUserFollowersCount(
+    alias: string,
+    add_amount: number
+  ): Promise<void> {
+    await this.updateUserFollowCount(alias, add_amount, this.userFollowersAttr);
+  }
+
+  async updateUserFolloweesCount(
+    alias: string,
+    add_amount: number
+  ): Promise<void> {
+    await this.updateUserFollowCount(alias, add_amount, this.userFolloweesAttr);
+  }
+
   async putUser(
     firstName: string,
     lastName: string,
@@ -49,6 +103,8 @@ export class UserDAOImpl implements UserDAO {
         [this.userFirstNameAttr]: firstName,
         [this.userLastNameAttr]: lastName,
         [this.userImageAttr]: imageUrl,
+        [this.userFollowersAttr]: 0,
+        [this.userFolloweesAttr]: 0,
       },
     };
     await this.tableDAO.putData(params);
