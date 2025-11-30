@@ -57,7 +57,7 @@ export class UserDAOImpl implements UserDAO {
         ];
   }
 
-  async updateUserFollowCount(
+  private async updateUserFollowCount(
     alias: string,
     add_amount: number,
     attribute: string

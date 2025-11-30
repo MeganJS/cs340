@@ -55,36 +55,35 @@ export class FollowService extends AuthenticationService implements Service {
     token: string,
     userToUnfollow: UserDTO
   ): Promise<[followerCount: number, followeeCount: number]> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    // Pause so we can see the unfollow message. Remove when connected to the server
-    // await new Promise((f) => setTimeout(f, 2000));
-    await this.followDAO.deleteFollow("@arnold", userToUnfollow.alias);
-
-    // TODO: Call the server
-    const followerCount = await this.getFollowerCount(token, userToUnfollow);
-    const followeeCount = await this.getFolloweeCount(token, userToUnfollow);
-
-    return [followerCount, followeeCount];
+    const userAlias = await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    await this.followDAO.deleteFollow(userAlias, userToUnfollow.alias);
+    return await this.manageFollowCounts(userAlias, userToUnfollow.alias, -1);
   }
 
   public async follow(
     token: string,
     userToFollow: UserDTO
   ): Promise<[followerCount: number, followeeCount: number]> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    const userAlias = await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    await this.followDAO.putFollow(userAlias, userToFollow.alias);
+    return await this.manageFollowCounts(userAlias, userToFollow.alias, 1);
+
     // Pause so we can see the follow message. Remove when connected to the server
     //await new Promise((f) => setTimeout(f, 2000));
-    await this.followDAO.putFollow("@arnold", userToFollow.alias);
+    //await this.updateFollowCounts(userAlias, userToFollow.alias, 1);
+    //await this.userDAO.updateUserFolloweesCount(userAlias, 1);
+    //await this.userDAO.updateUserFollowersCount(userToFollow.alias, 1);
 
     // TODO: Call the server
-    const followerCount = await this.getFollowerCount(token, userToFollow);
-    const followeeCount = await this.getFolloweeCount(token, userToFollow);
+    //const followerCount = await this.getFollowerCount(token, userToFollow);
+    //const followeeCount = await this.getFolloweeCount(token, userToFollow);
 
-    return [followerCount, followeeCount];
+    //return this.getFollowCounts(userToFollow.alias);
   }
 
+  /*
   public async getFolloweeCount(token: string, user: UserDTO): Promise<number> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    const userAlias = await this.checkTokenValidity(token); //TODO do I need to propagate errors?
     // TODO: Replace with the result of calling server
     return FakeData.instance.getFolloweeCount(user.alias);
   }
@@ -92,7 +91,54 @@ export class FollowService extends AuthenticationService implements Service {
   public async getFollowerCount(token: string, user: UserDTO): Promise<number> {
     await this.checkTokenValidity(token); //TODO do I need to propagate errors?
     // TODO: Replace with the result of calling server
-    return FakeData.instance.getFollowerCount(user.alias);
+    const counts = await this.getFollowCounts(user.alias);
+    return counts[0];
+    //return FakeData.instance.getFollowerCount(user.alias);
+  }
+    */
+
+  public async getFollowCount(
+    token: string,
+    alias: string,
+    follower: boolean
+  ): Promise<number> {
+    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    // TODO: Replace with the result of calling server
+    const [followerCount, followeeCount] = await this.getFollowCounts(alias);
+    if (follower) {
+      return followerCount;
+    }
+    return followeeCount;
+    //return counts[0];
+  }
+
+  private async manageFollowCounts(
+    userAlias: string,
+    actionAlias: string,
+    changeAmount: number
+  ): Promise<[followerCount: number, followeeCount: number]> {
+    await this.updateFollowCounts(userAlias, actionAlias, changeAmount);
+    return await this.getFollowCounts(actionAlias);
+  }
+
+  private async getFollowCounts(
+    alias: string
+  ): Promise<[followerCount: number, followeeCount: number]> {
+    const counts = await this.userDAO.getUserFollowCounts(alias);
+    if (typeof counts === "undefined") {
+      throw new Error(`Follow counts not found for ${alias}`);
+    }
+
+    return counts;
+  }
+
+  private async updateFollowCounts(
+    userAlias: string,
+    actionAlias: string,
+    changeAmount: number
+  ) {
+    await this.userDAO.updateUserFolloweesCount(userAlias, changeAmount);
+    await this.userDAO.updateUserFollowersCount(actionAlias, changeAmount);
   }
 
   public async getIsFollowerStatus(

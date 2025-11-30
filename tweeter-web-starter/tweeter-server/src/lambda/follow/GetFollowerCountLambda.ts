@@ -9,9 +9,10 @@ export const handler = async (
     DAOFactoryImpl.instance
   );
 
-  const followeeCount = await followService.getFollowerCount(
+  const followeeCount = await followService.getFollowCount(
     request.token,
-    request.user
+    request.user.alias,
+    true
   );
 
   return {
