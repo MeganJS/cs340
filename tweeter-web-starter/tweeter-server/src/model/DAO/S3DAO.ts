@@ -46,4 +46,8 @@ export class S3DAO implements DataDAO {
   async updateData(requestParams: RenameObjectRequest): Promise<void> {
     await this.client.send(new RenameObjectCommand(requestParams));
   }
+
+  async queryData(requestParams: any): Promise<void> {
+    console.log();
+  }
 }

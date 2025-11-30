@@ -6,4 +6,5 @@ export interface DataDAO {
   deleteData(requestParams: any): Promise<void>;
   getData(requestParams: any): Promise<any>;
   updateData(requestParams: any): Promise<void>;
+  queryData(requestParams: any): Promise<any>;
 }

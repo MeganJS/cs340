@@ -17,6 +17,8 @@ export interface FollowDAO {
   */
   putFollow(userAlias: string, userToFollowAlias: string): Promise<void>;
 
+  getFollow(userAlias: string, selectedAlias: string): Promise<boolean>;
+
   deleteFollow(userAlias: string, userToUnfollowAlias: string): Promise<void>;
   /*
   getFollowerStatus(

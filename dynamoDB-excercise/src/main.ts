@@ -8,6 +8,7 @@ class Main {
     const followsDAO = new FollowsDAO();
 
     try {
+      /*
       for (let i: number = 0; i < 25; i++) {
         let follower: User = new User("@Jay", "Jay");
         let name: string = String.fromCharCode("a".charCodeAt(0) + i);
@@ -36,6 +37,7 @@ class Main {
         new User("@Jay", "Jay"),
         new User("@b", "b")
       );
+      */
 
       //
       //Print pages of Followees

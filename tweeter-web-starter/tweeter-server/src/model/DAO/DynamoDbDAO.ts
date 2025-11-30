@@ -10,7 +10,12 @@ import {
   UpdateCommand,
   UpdateCommandInput,
 } from "@aws-sdk/lib-dynamodb";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBClient,
+  QueryCommand,
+  QueryCommandInput,
+  QueryCommandOutput,
+} from "@aws-sdk/client-dynamodb";
 import { DataDAO } from "./DataDAO";
 
 export class DynamoDbDAO implements DataDAO {
@@ -43,5 +48,10 @@ export class DynamoDbDAO implements DataDAO {
 
   async updateData(requestParams: UpdateCommandInput): Promise<void> {
     await this.client.send(new UpdateCommand(requestParams));
+  }
+  async queryData(
+    requestParams: QueryCommandInput
+  ): Promise<QueryCommandOutput> {
+    return await this.client.send(new QueryCommand(requestParams));
   }
 }
