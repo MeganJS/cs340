@@ -70,7 +70,7 @@ export class UserDAOImpl implements UserDAO {
       ExpressionAttributeValues: {
         ":inc": add_amount,
       },
-      UpdateExpression: "SET " + attribute + " = " + attribute + ":inc",
+      UpdateExpression: "SET " + attribute + " = " + attribute + " + :inc",
     };
     await this.tableDAO.updateData(params);
   }

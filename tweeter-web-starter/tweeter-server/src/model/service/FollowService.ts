@@ -23,7 +23,13 @@ export class FollowService extends AuthenticationService implements Service {
   ): Promise<[UserDTO[], boolean]> {
     // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    return await this.getFakeData(lastUserItem, pageSize, userAlias);
+    const [items, hasMore] = await this.followDAO.getPageOfFollowees(
+      userAlias,
+      pageSize,
+      lastUserItem ? lastUserItem.alias : null
+    );
+    return [await this.assembleUsers(items), hasMore];
+    //return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
   public async loadMoreFollowers(
@@ -34,9 +40,26 @@ export class FollowService extends AuthenticationService implements Service {
   ): Promise<[UserDTO[], boolean]> {
     // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    return await this.getFakeData(lastUserItem, pageSize, userAlias);
+    const [items, hasMore] = await this.followDAO.getPageOfFollowers(
+      userAlias,
+      pageSize,
+      lastUserItem ? lastUserItem.alias : null
+    );
+    return [await this.assembleUsers(items), hasMore];
+    //return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
+  private async assembleUsers(items: string[]): Promise<UserDTO[]> {
+    const users: UserDTO[] = [];
+    items.forEach(async (item: string) => {
+      let user = await this.userDAO.getUser(item);
+      if (typeof user !== "undefined") {
+        users.push(user);
+      }
+    });
+    return users;
+  }
+  /*
   private async getFakeData(
     lastUserItem: UserDTO | null,
     pageSize: number,
@@ -50,6 +73,7 @@ export class FollowService extends AuthenticationService implements Service {
     const dtos = items.map((user) => user.DTO);
     return [dtos, hasMore];
   }
+    */
 
   public async unfollow(
     token: string,
@@ -148,6 +172,7 @@ export class FollowService extends AuthenticationService implements Service {
   ): Promise<boolean> {
     // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    return FakeData.instance.isFollower();
+    return await this.followDAO.getFollow(user.alias, selectedUser.alias);
+    //return FakeData.instance.isFollower();
   }
 }

@@ -60,8 +60,9 @@ export class FollowDAOImpl implements FollowDAO {
   async getPageOfFollowees(
     followerHandle: string,
     pageSize: number,
-    lastFolloweeHandle: string | undefined
+    lastFolloweeHandle: string | null
   ): Promise<[items: string[], hasMore: boolean]> {
+    /*
     return await this.getPageOfFollowItems(
       followerHandle,
       pageSize,
@@ -69,13 +70,37 @@ export class FollowDAOImpl implements FollowDAO {
       this.followeeAttr,
       this.followerAttr
     );
+    */
+    let params = {
+      TableName: this.tableName,
+      Limit: pageSize,
+      KeyConditionExpression: this.followerAttr + " = :v",
+      ExpressionAttributeValues: {
+        ":v": followerHandle,
+      },
+      ExclusiveStartKey:
+        lastFolloweeHandle === null
+          ? undefined
+          : {
+              [this.followerAttr]: followerHandle,
+              [this.followeeAttr]: lastFolloweeHandle,
+            },
+    };
+
+    let data = await this.tableDAO.queryData(params);
+
+    const hasMore = data.LastEvaluatedKey !== undefined;
+    const items: string[] = [];
+    data.Items?.forEach((item: any) => items.push(item[this.followeeAttr]));
+    return [items, hasMore];
   }
 
   async getPageOfFollowers(
     followeeHandle: string,
     pageSize: number,
-    lastFollowerHandle: string | undefined
+    lastFollowerHandle: string | null
   ): Promise<[items: string[], hasMore: boolean]> {
+    /*
     return await this.getPageOfFollowItems(
       followeeHandle,
       pageSize,
@@ -83,12 +108,36 @@ export class FollowDAOImpl implements FollowDAO {
       this.followerAttr,
       this.followeeAttr
     );
+    */
+    let params = {
+      TableName: this.tableName,
+      IndexName: this.indexName,
+      Limit: pageSize,
+      KeyConditionExpression: this.followeeAttr + " = :v",
+      ExpressionAttributeValues: {
+        ":v": followeeHandle,
+      },
+      ExclusiveStartKey:
+        lastFollowerHandle === null
+          ? undefined
+          : {
+              [this.followeeAttr]: followeeHandle,
+              [this.followerAttr]: lastFollowerHandle,
+            },
+    };
+
+    let data = await this.tableDAO.queryData(params);
+
+    const hasMore = data.LastEvaluatedKey !== undefined;
+    const items: string[] = [];
+    data.Items?.forEach((item: any) => items.push(item[this.followerAttr]));
+    return [items, hasMore];
   }
 
   private async getPageOfFollowItems(
     userAlias: string,
     pageSize: number,
-    lastFollowItemAlias: string | undefined,
+    lastFollowItemAlias: string | null,
     followAttr: string,
     userFollowAttr: string
   ): Promise<[items: string[], hasMore: boolean]> {
@@ -100,7 +149,7 @@ export class FollowDAOImpl implements FollowDAO {
         ":v": userAlias,
       },
       ExclusiveStartKey:
-        lastFollowItemAlias === undefined
+        lastFollowItemAlias === null
           ? undefined
           : {
               [userFollowAttr]: userAlias,
@@ -108,7 +157,7 @@ export class FollowDAOImpl implements FollowDAO {
             },
     };
     //Source: https://www.omarileon.me/blog/typescript-merge-objects
-    let data;
+    let data: any;
     if (followAttr === this.followerAttr) {
       let params2 = { IndexName: this.indexName, ...params };
       data = await this.tableDAO.queryData(params2);
