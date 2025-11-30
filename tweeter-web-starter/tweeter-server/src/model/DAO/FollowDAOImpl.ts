@@ -60,7 +60,7 @@ export class FollowDAOImpl implements FollowDAO {
   async getPageOfFollowees(
     followerHandle: string,
     pageSize: number,
-    lastFolloweeHandle: string | null
+    lastFolloweeHandle: string | undefined
   ): Promise<[items: string[], hasMore: boolean]> {
     /*
     return await this.getPageOfFollowItems(
@@ -79,7 +79,7 @@ export class FollowDAOImpl implements FollowDAO {
         ":v": followerHandle,
       },
       ExclusiveStartKey:
-        lastFolloweeHandle === null
+        lastFolloweeHandle === undefined
           ? undefined
           : {
               [this.followerAttr]: followerHandle,
@@ -98,7 +98,7 @@ export class FollowDAOImpl implements FollowDAO {
   async getPageOfFollowers(
     followeeHandle: string,
     pageSize: number,
-    lastFollowerHandle: string | null
+    lastFollowerHandle: string | undefined
   ): Promise<[items: string[], hasMore: boolean]> {
     /*
     return await this.getPageOfFollowItems(
@@ -118,7 +118,7 @@ export class FollowDAOImpl implements FollowDAO {
         ":v": followeeHandle,
       },
       ExclusiveStartKey:
-        lastFollowerHandle === null
+        lastFollowerHandle === undefined
           ? undefined
           : {
               [this.followeeAttr]: followeeHandle,

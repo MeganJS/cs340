@@ -9,13 +9,11 @@ import {
   PutCommandInput,
   UpdateCommand,
   UpdateCommandInput,
-} from "@aws-sdk/lib-dynamodb";
-import {
-  DynamoDBClient,
   QueryCommand,
   QueryCommandInput,
   QueryCommandOutput,
-} from "@aws-sdk/client-dynamodb";
+} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DataDAO } from "./DataDAO";
 
 export class DynamoDbDAO implements DataDAO {

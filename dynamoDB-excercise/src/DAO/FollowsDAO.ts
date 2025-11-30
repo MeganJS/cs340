@@ -15,9 +15,9 @@ export class FollowsDAO {
   readonly tableName = "follows";
   readonly indexName = "follows_index";
   readonly followerAttr = "follower_handle";
-  readonly followerNameAttr = "follower_name";
+  //readonly followerNameAttr = "follower_name";
   readonly followeeAttr = "followee_handle";
-  readonly followeeNameAttr = "followee_name";
+  //readonly followeeNameAttr = "followee_name";
   //
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
@@ -43,11 +43,11 @@ export class FollowsDAO {
       : new Follows(
           new User(
             output.Item[this.followerAttr],
-            output.Item[this.followerNameAttr]
+            "output.Item[this.followerNameAttr]"
           ),
           new User(
             output.Item[this.followeeAttr],
-            output.Item[this.followeeNameAttr]
+            "output.Item[this.followeeNameAttr]"
           )
         );
   }
@@ -57,14 +57,14 @@ export class FollowsDAO {
       TableName: this.tableName,
       Item: {
         [this.followerAttr]: follower.handle,
-        [this.followerNameAttr]: follower.name,
+        //[this.followerNameAttr]: follower.name,
         [this.followeeAttr]: followee.handle,
-        [this.followeeNameAttr]: followee.name,
+        //[this.followeeNameAttr]: followee.name,
       },
     };
     await this.client.send(new PutCommand(params));
   }
-
+  /*
   async updateFollow(follower: User, followee: User) {
     const params = {
       TableName: this.tableName,
@@ -87,6 +87,7 @@ export class FollowsDAO {
     };
     await this.client.send(new UpdateCommand(params));
   }
+    */
 
   async deleteFollow(follower: User, followee: User) {
     const params = {
@@ -128,8 +129,8 @@ export class FollowsDAO {
     data.Items?.forEach((item) =>
       items.push(
         new Follows(
-          new User(item[this.followerAttr], item[this.followerNameAttr]),
-          new User(item[this.followeeAttr], item[this.followeeNameAttr])
+          new User(item[this.followerAttr], "item[this.followerNameAttr]"),
+          new User(item[this.followeeAttr], "item[this.followeeNameAttr]")
         )
       )
     );
@@ -164,8 +165,8 @@ export class FollowsDAO {
     data.Items?.forEach((item) =>
       items.push(
         new Follows(
-          new User(item[this.followerAttr], item[this.followerNameAttr]),
-          new User(item[this.followeeAttr], item[this.followeeNameAttr])
+          new User(item[this.followerAttr], "item[this.followerNameAttr]"),
+          new User(item[this.followeeAttr], "item[this.followeeNameAttr]")
         )
       )
     );

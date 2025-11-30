@@ -24,13 +24,13 @@ export interface FollowDAO {
   getPageOfFollowees(
     followerHandle: string,
     pageSize: number,
-    lastFolloweeHandle: string | null
+    lastFolloweeHandle: string | undefined
   ): Promise<[items: string[], hasMore: boolean]>;
 
   getPageOfFollowers(
     followeeHandle: string,
     pageSize: number,
-    lastFollowerHandle: string | null
+    lastFollowerHandle: string | undefined
   ): Promise<[items: string[], hasMore: boolean]>;
   /*
   getFollowerStatus(

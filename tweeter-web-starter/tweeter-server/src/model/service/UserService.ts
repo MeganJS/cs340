@@ -89,10 +89,11 @@ export class UserService extends AuthenticationService implements Service {
     await this.authDAO.putAuthInfo(alias, salt, hash);
 
     //insert image to s3
-    const saferImageExtension = encodeURI(imageFileExtension);
+    //const saferImageExtension = encodeURI(imageFileExtension);
     const imageUrl = await this.userDAO.putUserImage(
+      alias,
       imageStringBase64,
-      saferImageExtension
+      imageFileExtension
     );
     await this.userDAO.putUser(firstName, lastName, alias, imageUrl);
 

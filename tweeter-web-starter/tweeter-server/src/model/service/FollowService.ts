@@ -26,9 +26,11 @@ export class FollowService extends AuthenticationService implements Service {
     const [items, hasMore] = await this.followDAO.getPageOfFollowees(
       userAlias,
       pageSize,
-      lastUserItem ? lastUserItem.alias : null
+      lastUserItem === null ? undefined : lastUserItem.alias
     );
-    return [await this.assembleUsers(items), hasMore];
+    console.log(items);
+    const userItems = await this.assembleUsers(items);
+    return [userItems, hasMore];
     //return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
@@ -43,20 +45,24 @@ export class FollowService extends AuthenticationService implements Service {
     const [items, hasMore] = await this.followDAO.getPageOfFollowers(
       userAlias,
       pageSize,
-      lastUserItem ? lastUserItem.alias : null
+      lastUserItem === null ? undefined : lastUserItem.alias
     );
-    return [await this.assembleUsers(items), hasMore];
+    console.log(items);
+    const userItems = await this.assembleUsers(items);
+    return [userItems, hasMore];
     //return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
   private async assembleUsers(items: string[]): Promise<UserDTO[]> {
     const users: UserDTO[] = [];
-    items.forEach(async (item: string) => {
+
+    for (let item of items) {
       let user = await this.userDAO.getUser(item);
+      console.log(item, user);
       if (typeof user !== "undefined") {
         users.push(user);
       }
-    });
+    }
     return users;
   }
   /*

@@ -111,6 +111,7 @@ export class UserDAOImpl implements UserDAO {
   }
 
   async putUserImage(
+    alias: string,
     imageStringBase64: string,
     imageFileExtension: string
   ): Promise<string> {
@@ -118,14 +119,14 @@ export class UserDAOImpl implements UserDAO {
 
     const s3Params = {
       Bucket: BUCKET,
-      Key: "image/" + imageFileExtension,
+      Key: "image/" + alias,
       Body: decodedImageBuffer,
-      ContentType: "image/png",
+      ContentType: "image/" + imageFileExtension,
       ACL: ObjectCannedACL.public_read,
     };
     try {
       await this.fileDAO.putData(s3Params);
-      return `https://${BUCKET}.s3.${REGION}.amazonaws.com/image/${imageFileExtension}`; //TODO make sure this data is safe
+      return `https://${BUCKET}.s3.${REGION}.amazonaws.com/image/${alias}`; //TODO make sure this data is safe
     } catch (e) {
       throw Error("s3 put image failed with: " + e);
     }

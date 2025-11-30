@@ -42,7 +42,7 @@ class Main {
       //
       //Print pages of Followees
       let dataPageFollowees: DataPage<Follows> =
-        await followsDAO.getPageOfFollowees("@Jay", 10, undefined);
+        await followsDAO.getPageOfFollowees("k", 10, undefined);
 
       dataPageFollowees.values.forEach((value) =>
         console.log(value.toString())
@@ -60,7 +60,7 @@ class Main {
       }
       console.log("Page 2");
       dataPageFollowees = await followsDAO.getPageOfFollowees(
-        "@Jay",
+        "k",
         10,
         lastFolloweeHandle
       );
@@ -73,7 +73,7 @@ class Main {
       //
       // get data page of followers
       let dataPageFollowers: DataPage<Follows> =
-        await followsDAO.getPageOfFollowers("@Kay", 10, undefined);
+        await followsDAO.getPageOfFollowers("k", 10, undefined);
 
       dataPageFollowers.values.forEach((value) =>
         console.log(value.toString())
@@ -91,7 +91,7 @@ class Main {
       }
       console.log("Page 2");
       dataPageFollowers = await followsDAO.getPageOfFollowers(
-        "@Kay",
+        "k",
         10,
         lastFollowerHandle
       );
