@@ -28,7 +28,7 @@ export class FollowService extends AuthenticationService implements Service {
       pageSize,
       lastUserItem === null ? undefined : lastUserItem.alias
     );
-    console.log(items);
+    //console.log(items);
     const userItems = await this.assembleUsers(items);
     return [userItems, hasMore];
     //return await this.getFakeData(lastUserItem, pageSize, userAlias);
@@ -47,7 +47,7 @@ export class FollowService extends AuthenticationService implements Service {
       pageSize,
       lastUserItem === null ? undefined : lastUserItem.alias
     );
-    console.log(items);
+    //console.log(items);
     const userItems = await this.assembleUsers(items);
     return [userItems, hasMore];
     //return await this.getFakeData(lastUserItem, pageSize, userAlias);
@@ -58,7 +58,7 @@ export class FollowService extends AuthenticationService implements Service {
 
     for (let item of items) {
       let user = await this.userDAO.getUser(item);
-      console.log(item, user);
+      //console.log(item, user);
       if (typeof user !== "undefined") {
         users.push(user);
       }

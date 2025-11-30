@@ -62,7 +62,6 @@ export class FollowDAOImpl implements FollowDAO {
     pageSize: number,
     lastFolloweeHandle: string | undefined
   ): Promise<[items: string[], hasMore: boolean]> {
-    /*
     return await this.getPageOfFollowItems(
       followerHandle,
       pageSize,
@@ -70,7 +69,8 @@ export class FollowDAOImpl implements FollowDAO {
       this.followeeAttr,
       this.followerAttr
     );
-    */
+
+    /*
     let params = {
       TableName: this.tableName,
       Limit: pageSize,
@@ -93,6 +93,7 @@ export class FollowDAOImpl implements FollowDAO {
     const items: string[] = [];
     data.Items?.forEach((item: any) => items.push(item[this.followeeAttr]));
     return [items, hasMore];
+    */
   }
 
   async getPageOfFollowers(
@@ -100,7 +101,6 @@ export class FollowDAOImpl implements FollowDAO {
     pageSize: number,
     lastFollowerHandle: string | undefined
   ): Promise<[items: string[], hasMore: boolean]> {
-    /*
     return await this.getPageOfFollowItems(
       followeeHandle,
       pageSize,
@@ -108,7 +108,8 @@ export class FollowDAOImpl implements FollowDAO {
       this.followerAttr,
       this.followeeAttr
     );
-    */
+
+    /*
     let params = {
       TableName: this.tableName,
       IndexName: this.indexName,
@@ -132,12 +133,13 @@ export class FollowDAOImpl implements FollowDAO {
     const items: string[] = [];
     data.Items?.forEach((item: any) => items.push(item[this.followerAttr]));
     return [items, hasMore];
+    */
   }
 
   private async getPageOfFollowItems(
     userAlias: string,
     pageSize: number,
-    lastFollowItemAlias: string | null,
+    lastFollowItemAlias: string | undefined,
     followAttr: string,
     userFollowAttr: string
   ): Promise<[items: string[], hasMore: boolean]> {
@@ -149,7 +151,7 @@ export class FollowDAOImpl implements FollowDAO {
         ":v": userAlias,
       },
       ExclusiveStartKey:
-        lastFollowItemAlias === null
+        lastFollowItemAlias === undefined
           ? undefined
           : {
               [userFollowAttr]: userAlias,
