@@ -1,4 +1,4 @@
-export const BUCKET: string = "cs340-tweeter-247";
+export const BUCKET: string = "cs340-tweeter-images-247";
 export const REGION: string = "us-west-2";
 
 export interface DataDAO {

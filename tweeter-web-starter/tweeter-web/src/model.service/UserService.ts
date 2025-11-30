@@ -60,8 +60,6 @@ export class UserService implements Service {
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
 
-    const saferImageExtension = encodeURI(imageFileExtension);
-
     return await this.server.authenticate(
       {
         firstName: firstName,
@@ -69,7 +67,7 @@ export class UserService implements Service {
         alias: alias,
         password: password,
         imageStringBase64: imageStringBase64,
-        imageFileExtension: saferImageExtension,
+        imageFileExtension: imageFileExtension,
       },
       "register",
       "Invalid registration"

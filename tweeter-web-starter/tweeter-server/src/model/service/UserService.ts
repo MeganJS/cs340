@@ -15,8 +15,6 @@ export class UserService implements Service {
   }
 
   public async getUser(token: string, alias: string): Promise<UserDTO | null> {
-    // TODO: Replace with the result of calling server
-    //const user = FakeData.instance.findUserByAlias(alias);
     const user = await this.userDAO.getUser(alias);
     return user == null ? null : user;
   }
@@ -25,13 +23,8 @@ export class UserService implements Service {
     alias: string,
     password: string
   ): Promise<[UserDTO, AuthTokenDTO]> {
-    // TODO: Replace with the result of calling the server
-
     //steps:
-    //get stored salt for username
-    //append it to password
-    //hash
-    //compare our hash with stored hash
+    //get stored salt for username, append it to password, hash, compare our hash with stored hash
     const authInfo = await this.authDAO.getAuthInfo(alias);
 
     if (authInfo === null) {
@@ -41,9 +34,7 @@ export class UserService implements Service {
     //const salt = authInfo[0];
     const hash = authInfo[1];
     //const hashPass = bcrypt.hashSync(password, salt);
-
     if (!bcrypt.compareSync(password, hash)) {
-      //TOdo check if correct???
       throw new Error("Invalid alias or password");
     }
 
@@ -61,8 +52,6 @@ export class UserService implements Service {
     */
     const authToken = AuthToken.Generate().DTO;
     await this.authDAO.putToken(alias, authToken);
-    //TODO!!!
-    //check if the user already has an authToken. If so, replace it with this one.
 
     //const user = FakeData.instance.firstUser;
     return [user, authToken];
@@ -85,10 +74,7 @@ export class UserService implements Service {
     // Not neded now, but will be needed when you make the request to the server in milestone 3
     //const imageStringBase64: string =
     //  Buffer.from(userImageBytes).toString("base64");
-
-    //const user = FakeData.instance.firstUser;
     const userCheck = await this.userDAO.getUser(alias);
-
     if (typeof userCheck != "undefined") {
       throw new Error("Alias already in use");
     }
@@ -98,8 +84,12 @@ export class UserService implements Service {
     const hash = await bcrypt.hash(password, salt);
     await this.authDAO.putAuthInfo(alias, salt, hash);
 
-    //TODO insert image into s3, get URL
-    const imageUrl = "haven't done this yet";
+    //insert image to s3
+    const saferImageExtension = encodeURI(imageFileExtension);
+    const imageUrl = await this.userDAO.putUserImage(
+      imageStringBase64,
+      saferImageExtension
+    );
     await this.userDAO.putUser(firstName, lastName, alias, imageUrl);
 
     //create new authToken and put in session with timestamp
@@ -112,7 +102,6 @@ export class UserService implements Service {
 
     const authToken = AuthToken.Generate().DTO;
     await this.authDAO.putToken(alias, authToken);
-    //TODO!!!
 
     //return created user (get from database or no?)
     const user = {
@@ -153,6 +142,7 @@ export class UserService implements Service {
 
     return [followerCount, followeeCount];
   }
+    */
 
   public async getFolloweeCount(token: string, user: UserDTO): Promise<number> {
     // TODO: Replace with the result of calling server
@@ -163,7 +153,7 @@ export class UserService implements Service {
     // TODO: Replace with the result of calling server
     return FakeData.instance.getFollowerCount(user.alias);
   }
-
+  /*
   public async getIsFollowerStatus(
     token: string,
     user: UserDTO,

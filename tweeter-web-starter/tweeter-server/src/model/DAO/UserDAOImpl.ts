@@ -54,7 +54,10 @@ export class UserDAOImpl implements UserDAO {
     await this.tableDAO.putData(params);
   }
 
-  async putUserImage(imageStringBase64: string, imageFileExtension: string) {
+  async putUserImage(
+    imageStringBase64: string,
+    imageFileExtension: string
+  ): Promise<string> {
     let decodedImageBuffer: Buffer = Buffer.from(imageStringBase64, "base64");
 
     const s3Params = {

@@ -9,4 +9,9 @@ export interface UserDAO {
     alias: string,
     imageUrl: string
   ): Promise<void>;
+
+  putUserImage(
+    imageStringBase64: string,
+    imageFileExtension: string
+  ): Promise<string>;
 }
