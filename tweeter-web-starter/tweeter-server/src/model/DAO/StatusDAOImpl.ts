@@ -90,8 +90,9 @@ export class StatusDAOImpl implements StatusDAO {
           : {
               [this.userAttr]: userAlias,
               [this.timeAttr]: lastItem.timestamp,
-              [statusAttr]: JSON.stringify(lastItem),
+              //[statusAttr]: JSON.stringify(lastItem),
             },
+      ScanIndexForward: false,
     };
     //Source: https://www.omarileon.me/blog/typescript-merge-objects
     let data = await this.tableDAO.queryData(params);
