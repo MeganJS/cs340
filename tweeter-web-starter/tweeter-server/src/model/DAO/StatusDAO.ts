@@ -3,22 +3,18 @@ import { StatusDTO } from "tweeter-shared";
 export interface StatusDAO {
   putPostedStatus(alias: string, newStatus: StatusDTO): Promise<void>;
   putFollowedStatus(alias: string, newStatus: StatusDTO): Promise<void>;
-  /*
+
   getStoryItems(
-    token: string,
     alias: string,
     pageSize: number,
     lastItem: StatusDTO | null
   ): Promise<[StatusDTO[], boolean]>;
-  */
-  /*
+
   getFeedItems(
-    token: string,
     alias: string,
     pageSize: number,
     lastItem: StatusDTO | null
   ): Promise<[StatusDTO[], boolean]>;
-  */
 }
 
 //user alias

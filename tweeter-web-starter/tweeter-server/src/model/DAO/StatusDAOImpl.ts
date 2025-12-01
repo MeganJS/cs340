@@ -41,4 +41,42 @@ export class StatusDAOImpl implements StatusDAO {
     };
     await this.tableDAO.putData(params);
   }
+
+  async getStoryItems(
+    alias: string,
+    pageSize: number,
+    lastItem: StatusDTO | null
+  ): Promise<[StatusDTO[], boolean]> {}
+
+  private async getPageOfStatusItems(
+    userAlias: string,
+    pageSize: number,
+    lastItem: StatusDTO | undefined,
+    tableAttr: string,
+    statusAttr: string
+  ): Promise<[items: string[], hasMore: boolean]> {
+    let params = {
+      TableName: tableAttr,
+      Limit: pageSize,
+      KeyConditionExpression: this.userAttr + " = :v",
+      ExpressionAttributeValues: {
+        ":v": userAlias,
+      },
+      ExclusiveStartKey:
+        lastItem === undefined
+          ? undefined
+          : {
+              [this.userAttr]: userAlias,
+              [this.timeAttr]: lastItem.timestamp,
+              [statusAttr]: JSON.stringify(lastItem),
+            },
+    };
+    //Source: https://www.omarileon.me/blog/typescript-merge-objects
+    let data = await this.tableDAO.queryData(params);
+
+    const hasMore = data.LastEvaluatedKey !== undefined;
+    const items: string[] = [];
+    //data.Items?.forEach((item: any) => items.push(item[followAttr])); TODO implement
+    return [items, hasMore];
+  }
 }
