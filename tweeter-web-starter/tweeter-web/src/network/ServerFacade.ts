@@ -122,13 +122,13 @@ export class ServerFacade {
       UserItemRequest,
       UserItemResponse
     >(request, "/user");
-    const user = User.fromDTO(response.user);
 
     try {
       this.checkResponse(response, () => {});
     } catch (e: any) {
       throw new Error(e.message);
     }
+    const user = User.fromDTO(response.user);
     return user;
   }
 
@@ -142,13 +142,14 @@ export class ServerFacade {
       `/auth/${path}`
     );
 
-    const user = User.fromDTO(response.user);
-    const authToken = AuthToken.fromDTO(response.authToken);
     try {
-      this.checkAuthResponse(response, user, authToken, errMessage);
+      //this.checkAuthResponse(response, user, authToken, errMessage);
+      this.checkResponse(response, () => {});
     } catch (e: any) {
       throw new Error(e.message);
     }
+    const user = User.fromDTO(response.user);
+    const authToken = AuthToken.fromDTO(response.authToken);
     return [user!, authToken!]; //TODO test this
   }
 

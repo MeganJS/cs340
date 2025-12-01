@@ -8,16 +8,24 @@ export const handler = async (
   const followService: FollowService = new FollowService(
     DAOFactoryImpl.instance
   );
+  try {
+    const [followerCount, followeeCount] = await followService.follow(
+      request.token,
+      request.user
+    );
 
-  const [followerCount, followeeCount] = await followService.follow(
-    request.token,
-    request.user
-  );
-
-  return {
-    success: true,
-    message: null,
-    followerCount: followerCount,
-    followeeCount: followeeCount,
-  };
+    return {
+      success: true,
+      message: null,
+      followerCount: followerCount,
+      followeeCount: followeeCount,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+      followerCount: 0,
+      followeeCount: 0,
+    };
+  }
 };

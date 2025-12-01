@@ -6,17 +6,26 @@ export const handler = async (
   request: PagedItemRequest<StatusDTO>
 ): Promise<PagedItemResponse<StatusDTO>> => {
   const statusService = new StatusService(DAOFactoryImpl.instance);
-  const [items, hasMore] = await statusService.loadMoreStoryItems(
-    request.token,
-    request.alias,
-    request.pageSize,
-    request.lastItem
-  );
+  try {
+    const [items, hasMore] = await statusService.loadMoreStoryItems(
+      request.token,
+      request.alias,
+      request.pageSize,
+      request.lastItem
+    );
 
-  return {
-    success: true,
-    message: null,
-    items: items,
-    hasMore: hasMore,
-  };
+    return {
+      success: true,
+      message: null,
+      items: items,
+      hasMore: hasMore,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+      items: null,
+      hasMore: false,
+    };
+  }
 };

@@ -5,18 +5,27 @@ import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 export const handler = async (
   request: PagedItemRequest<UserDTO>
 ): Promise<PagedItemResponse<UserDTO>> => {
-  const followService = new FollowService(DAOFactoryImpl.instance); //TODO is correct???
-  const [items, hasMore] = await followService.loadMoreFollowees(
-    request.token,
-    request.alias,
-    request.pageSize,
-    request.lastItem
-  );
+  const followService = new FollowService(DAOFactoryImpl.instance);
+  try {
+    const [items, hasMore] = await followService.loadMoreFollowees(
+      request.token,
+      request.alias,
+      request.pageSize,
+      request.lastItem
+    );
 
-  return {
-    success: true,
-    message: null,
-    items: items,
-    hasMore: hasMore,
-  };
+    return {
+      success: true,
+      message: null,
+      items: items,
+      hasMore: hasMore,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+      items: null,
+      hasMore: false,
+    };
+  }
 };

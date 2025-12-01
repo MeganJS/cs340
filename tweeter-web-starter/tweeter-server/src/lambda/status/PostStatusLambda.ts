@@ -6,10 +6,17 @@ export const handler = async (
   request: StatusItemRequest
 ): Promise<TweeterResponse> => {
   const statusService = new StatusService(DAOFactoryImpl.instance);
-  await statusService.postStatus(request.token, request.statusItem);
+  try {
+    await statusService.postStatus(request.token, request.statusItem);
 
-  return {
-    success: true,
-    message: null,
-  };
+    return {
+      success: true,
+      message: null,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+    };
+  }
 };

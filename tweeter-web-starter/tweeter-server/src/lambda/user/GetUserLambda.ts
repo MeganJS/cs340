@@ -6,12 +6,19 @@ export const handler = async (
   request: UserItemRequest
 ): Promise<UserItemResponse> => {
   const userService: UserService = new UserService(DAOFactoryImpl.instance);
+  try {
+    const user = await userService.getUser(request.token, request.alias);
 
-  const user = await userService.getUser(request.token, request.alias);
-
-  return {
-    success: true,
-    message: null,
-    user: user,
-  };
+    return {
+      success: true,
+      message: null,
+      user: user,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+      user: null,
+    };
+  }
 };

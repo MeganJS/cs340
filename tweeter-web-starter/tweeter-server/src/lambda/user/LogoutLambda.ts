@@ -6,11 +6,17 @@ export const handler = async (
   request: TokenRequest
 ): Promise<TweeterResponse> => {
   const userService: UserService = new UserService(DAOFactoryImpl.instance);
+  try {
+    await userService.logout(request.token);
 
-  await userService.logout(request.token);
-
-  return {
-    success: true,
-    message: null,
-  };
+    return {
+      success: true,
+      message: null,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: (e as Error).message,
+    };
+  }
 };
