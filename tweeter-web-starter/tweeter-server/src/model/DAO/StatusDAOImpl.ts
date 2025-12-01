@@ -42,11 +42,33 @@ export class StatusDAOImpl implements StatusDAO {
     await this.tableDAO.putData(params);
   }
 
-  async getStoryItems(
+  async getPageOfStoryItems(
     alias: string,
     pageSize: number,
-    lastItem: StatusDTO | null
-  ): Promise<[StatusDTO[], boolean]> {}
+    lastItem: StatusDTO | undefined
+  ): Promise<[StatusDTO[], boolean]> {
+    return await this.getPageOfStatusItems(
+      alias,
+      pageSize,
+      lastItem,
+      this.storyTableName,
+      this.storyAttr
+    );
+  }
+
+  async getPageOfFeedItems(
+    alias: string,
+    pageSize: number,
+    lastItem: StatusDTO | undefined
+  ): Promise<[StatusDTO[], boolean]> {
+    return await this.getPageOfStatusItems(
+      alias,
+      pageSize,
+      lastItem,
+      this.feedTableName,
+      this.feedAttr
+    );
+  }
 
   private async getPageOfStatusItems(
     userAlias: string,
@@ -54,7 +76,7 @@ export class StatusDAOImpl implements StatusDAO {
     lastItem: StatusDTO | undefined,
     tableAttr: string,
     statusAttr: string
-  ): Promise<[items: string[], hasMore: boolean]> {
+  ): Promise<[items: StatusDTO[], hasMore: boolean]> {
     let params = {
       TableName: tableAttr,
       Limit: pageSize,
@@ -75,8 +97,10 @@ export class StatusDAOImpl implements StatusDAO {
     let data = await this.tableDAO.queryData(params);
 
     const hasMore = data.LastEvaluatedKey !== undefined;
-    const items: string[] = [];
-    //data.Items?.forEach((item: any) => items.push(item[followAttr])); TODO implement
+    const items: StatusDTO[] = [];
+    data.Items?.forEach((item: any) =>
+      items.push(JSON.parse(item[statusAttr]))
+    );
     return [items, hasMore];
   }
 }

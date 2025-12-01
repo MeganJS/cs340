@@ -23,9 +23,10 @@ export class UserService implements Service {
   ): Promise<[User, AuthToken]> {
     // TODO: Replace with the result of calling the server
     // const user = FakeData.instance.firstUser;
+    const atAlias = "@" + alias;
 
     return await this.server.authenticate(
-      { alias: alias, password: password },
+      { alias: atAlias, password: password },
       "login",
       "Invalid alias or password"
     );
@@ -60,11 +61,13 @@ export class UserService implements Service {
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
 
+    const atAlias = "@" + alias;
+
     return await this.server.authenticate(
       {
         firstName: firstName,
         lastName: lastName,
-        alias: alias,
+        alias: atAlias,
         password: password,
         imageStringBase64: imageStringBase64,
         imageFileExtension: imageFileExtension,

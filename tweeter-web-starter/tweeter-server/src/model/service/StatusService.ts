@@ -1,4 +1,3 @@
-import { FakeData, Status } from "tweeter-shared";
 import { Service } from "./Service";
 import { StatusDTO } from "tweeter-shared";
 import { AuthenticationService } from "./AuthenticationService";
@@ -27,7 +26,12 @@ export class StatusService extends AuthenticationService implements Service {
   ): Promise<[StatusDTO[], boolean]> {
     // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token);
-    return await this.getFakeData(pageSize, lastItem);
+    //return await this.getFakeData(pageSize, lastItem);
+    return await this.statusDAO.getPageOfFeedItems(
+      alias,
+      pageSize,
+      lastItem === null ? undefined : lastItem
+    );
   }
 
   public async loadMoreStoryItems(
@@ -38,9 +42,14 @@ export class StatusService extends AuthenticationService implements Service {
   ): Promise<[StatusDTO[], boolean]> {
     // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token);
-    return await this.getFakeData(pageSize, lastItem);
+    //return await this.getFakeData(pageSize, lastItem);
+    return await this.statusDAO.getPageOfStoryItems(
+      alias,
+      pageSize,
+      lastItem === null ? undefined : lastItem
+    );
   }
-
+  /*
   private async getFakeData(
     pageSize: number,
     lastItem: StatusDTO | null
@@ -53,6 +62,7 @@ export class StatusService extends AuthenticationService implements Service {
     const dtos = items.map((status) => status.DTO);
     return [dtos, hasMore];
   }
+    */
 
   public async postStatus(token: string, newStatus: StatusDTO): Promise<void> {
     // Pause so we can see the logging out message. Remove when connected to the server

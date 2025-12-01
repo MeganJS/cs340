@@ -11,10 +11,11 @@ export class AuthDAOImpl implements AuthDAO {
   private readonly authSaltAttr = "salt";
 
   private readonly sessTableName = "sessions";
-  private readonly sessIndexName = "alias_index";
+  //private readonly sessIndexName = "alias_index";
   private readonly sessTokenAttr = "token";
   private readonly sessAliasAttr = "alias";
   private readonly sessTimeAttr = "date_time";
+  private readonly sessExpireAttr = "expire_at";
 
   constructor(tables: DataDAO) {
     this.tableDAO = tables;
@@ -47,13 +48,18 @@ export class AuthDAOImpl implements AuthDAO {
       : [output.Item[this.authSaltAttr], output.Item[this.authHashAttr]];
   }
 
-  async putToken(alias: string, authToken: AuthTokenDTO): Promise<void> {
+  async putToken(
+    alias: string,
+    authToken: AuthTokenDTO,
+    expireTime: number
+  ): Promise<void> {
     const params = {
       TableName: this.sessTableName,
       Item: {
         [this.sessTokenAttr]: authToken.token,
         [this.sessTimeAttr]: authToken.timestamp,
         [this.sessAliasAttr]: alias,
+        [this.sessExpireAttr]: expireTime,
       },
     };
     await this.tableDAO.putData(params);
@@ -69,7 +75,7 @@ export class AuthDAOImpl implements AuthDAO {
     await this.tableDAO.deleteData(params);
   }
 
-  async getTokenTime(token: string): Promise<AuthTokenDTO | undefined> {
+  async getTokenExpireTime(token: string): Promise<number | undefined> {
     const params = {
       TableName: this.sessTableName,
       Key: {
@@ -80,10 +86,7 @@ export class AuthDAOImpl implements AuthDAO {
     const output = await this.tableDAO.getData(params);
     return output.Item == undefined
       ? undefined
-      : {
-          token: output.Item[this.sessTokenAttr],
-          timestamp: output.Item[this.sessTimeAttr],
-        };
+      : output.Item[this.sessExpireAttr];
   }
 
   async getTokenAlias(token: string): Promise<string | undefined> {
@@ -118,7 +121,11 @@ export class AuthDAOImpl implements AuthDAO {
         };
   }
 */
-  async updateTime(token: string, timestamp: number): Promise<void> {
+  async updateTime(
+    token: string,
+    timestamp: number,
+    expireTime: number
+  ): Promise<void> {
     const params = {
       TableName: this.sessTableName,
       Key: {
@@ -126,8 +133,16 @@ export class AuthDAOImpl implements AuthDAO {
       },
       ExpressionAttributeValues: {
         ":date_time": timestamp,
+        ":expire_at": expireTime,
       },
-      UpdateExpression: "SET " + this.sessTimeAttr + " = " + ":date_time",
+      UpdateExpression:
+        "SET " +
+        this.sessTimeAttr +
+        " = " +
+        ":date_time, " +
+        this.sessExpireAttr +
+        " = " +
+        ":expire_at",
     };
     await this.tableDAO.updateData(params);
   }

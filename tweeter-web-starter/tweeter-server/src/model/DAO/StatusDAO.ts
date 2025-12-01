@@ -4,20 +4,15 @@ export interface StatusDAO {
   putPostedStatus(alias: string, newStatus: StatusDTO): Promise<void>;
   putFollowedStatus(alias: string, newStatus: StatusDTO): Promise<void>;
 
-  getStoryItems(
+  getPageOfStoryItems(
     alias: string,
     pageSize: number,
-    lastItem: StatusDTO | null
+    lastItem: StatusDTO | undefined
   ): Promise<[StatusDTO[], boolean]>;
 
-  getFeedItems(
+  getPageOfFeedItems(
     alias: string,
     pageSize: number,
-    lastItem: StatusDTO | null
+    lastItem: StatusDTO | undefined
   ): Promise<[StatusDTO[], boolean]>;
 }
-
-//user alias
-//posts_made
-//posts_followed
-//could do an id system, but it's not required for the specs of this project

@@ -2,6 +2,8 @@ import { AuthDAO } from "../DAO/AuthDAO";
 import { DAOFactory } from "../DAO/DAOFactory";
 import { Service } from "./Service";
 
+export const VALID_DURATION = 24 * 60 * 60;
+
 export class AuthenticationService implements Service {
   protected authDAO: AuthDAO;
 
@@ -11,21 +13,20 @@ export class AuthenticationService implements Service {
 
   async checkTokenValidity(token: string): Promise<string> {
     const timestamp: number = Date.now();
-    const authToken = await this.authDAO.getTokenTime(token);
-    if (typeof authToken === "undefined") {
+    const timestamp_seconds = Math.floor(timestamp / 1000);
+    const expireTime = await this.authDAO.getTokenExpireTime(token);
+    if (typeof expireTime === "undefined") {
       throw new Error("Token Not Found");
     }
 
-    //source of this code: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
-    let num_seconds = Math.floor((timestamp - authToken.timestamp) / 1000);
-    let num_minutes = Math.floor(num_seconds / 60);
-
-    if (num_minutes > 240) {
+    //referenced code at: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+    if (timestamp_seconds > expireTime) {
       //check if this is
       await this.authDAO.deleteToken(token);
       throw new Error("Session Timed Out");
     } else {
-      await this.authDAO.updateTime(token, timestamp);
+      let newExpireTime = timestamp_seconds + VALID_DURATION;
+      await this.authDAO.updateTime(token, timestamp, newExpireTime);
       const alias = await this.authDAO.getTokenAlias(token);
       if (typeof alias === "undefined") {
         throw new Error("Token Alias Not Found");

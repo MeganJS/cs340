@@ -4,7 +4,7 @@ import { UserDAO } from "../DAO/UserDAO";
 import { DAOFactory } from "../DAO/DAOFactory";
 import bcrypt from "bcryptjs";
 import { AuthDAO } from "../DAO/AuthDAO";
-import { AuthenticationService } from "./AuthenticationService";
+import { AuthenticationService, VALID_DURATION } from "./AuthenticationService";
 
 export class UserService extends AuthenticationService implements Service {
   private userDAO: UserDAO;
@@ -55,7 +55,8 @@ export class UserService extends AuthenticationService implements Service {
     }
     */
     const authToken = AuthToken.Generate().DTO;
-    await this.authDAO.putToken(alias, authToken);
+    const expireTime = Math.floor(authToken.timestamp / 1000) + VALID_DURATION;
+    await this.authDAO.putToken(alias, authToken, expireTime);
 
     //const user = FakeData.instance.firstUser;
     return [user, authToken];
@@ -106,7 +107,8 @@ export class UserService extends AuthenticationService implements Service {
       */
 
     const authToken = AuthToken.Generate().DTO;
-    await this.authDAO.putToken(alias, authToken);
+    const expireTime = Math.floor(authToken.timestamp / 1000) + VALID_DURATION;
+    await this.authDAO.putToken(alias, authToken, expireTime);
 
     //return created user (get from database or no?)
     const user = {
