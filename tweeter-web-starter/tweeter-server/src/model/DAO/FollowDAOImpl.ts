@@ -7,7 +7,7 @@ import { DataDAO } from "./DataDAO";
 export class FollowDAOImpl implements FollowDAO {
   //private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
   private readonly tableDAO: DataDAO;
-  private readonly fileDAO: DataDAO;
+  //private readonly fileDAO: DataDAO;
   private readonly tableName = "follows";
   private readonly indexName = "follows_index";
   private readonly followerAttr = "follower_handle";
@@ -15,9 +15,9 @@ export class FollowDAOImpl implements FollowDAO {
   private readonly followeeAttr = "followee_handle";
   //private readonly followeeDTO = "followee_dto";
 
-  constructor(tables: DataDAO, files: DataDAO) {
+  constructor(tables: DataDAO) {
     this.tableDAO = tables;
-    this.fileDAO = files;
+    //this.fileDAO = files;
   }
 
   async putFollow(followerAlias: string, followeeAlias: string) {

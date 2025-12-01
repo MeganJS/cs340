@@ -1,4 +1,4 @@
-import { User, FakeData, UserDTO, AuthTokenDTO } from "tweeter-shared";
+import { UserDTO } from "tweeter-shared";
 import { Service } from "./Service";
 import { DAOFactory } from "../DAO/DAOFactory";
 import { FollowDAO } from "../DAO/FollowDAO";

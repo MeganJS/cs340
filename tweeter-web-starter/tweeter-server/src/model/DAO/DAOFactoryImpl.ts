@@ -7,12 +7,13 @@ import { FollowDAO } from "./FollowDAO";
 import { FollowDAOImpl } from "./FollowDAOImpl";
 import { S3DAO } from "./S3DAO";
 import { StatusDAO } from "./StatusDAO";
+import { StatusDAOImpl } from "./StatusDAOImpl";
 import { UserDAO } from "./UserDAO";
 import { UserDAOImpl } from "./UserDAOImpl";
 
 export class DAOFactoryImpl implements DAOFactory {
   public followDAO: FollowDAO;
-  //public statusDAO: StatusDAO;
+  public statusDAO: StatusDAO;
   public userDAO: UserDAO;
   public authDAO: AuthDAO;
   //private dynamoDAO: DataDAO;
@@ -22,9 +23,9 @@ export class DAOFactoryImpl implements DAOFactory {
   constructor() {
     //this.dynamoDAO = new DynamoDbDAO();
     //this.s3DAO = new S3DAO();
-    this.followDAO = new FollowDAOImpl(DynamoDbDAO.instance, S3DAO.instance);
+    this.followDAO = new FollowDAOImpl(DynamoDbDAO.instance);
     this.userDAO = new UserDAOImpl(DynamoDbDAO.instance, S3DAO.instance);
-    //this.statusDAO = new StatusDAOImpl(DynamoDbDAO.instance, S3DAO.instance);
+    this.statusDAO = new StatusDAOImpl(DynamoDbDAO.instance);
     this.authDAO = new AuthDAOImpl(DynamoDbDAO.instance);
   }
 
