@@ -1,4 +1,4 @@
-import { AuthTokenDTO, UserDTO } from "tweeter-shared";
+import { UserDTO } from "tweeter-shared";
 
 export interface UserDAO {
   getUser(alias: string): Promise<UserDTO | undefined>;

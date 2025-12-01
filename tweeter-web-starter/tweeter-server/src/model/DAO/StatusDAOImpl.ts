@@ -1,4 +1,4 @@
-import { UserDTO, StatusDTO } from "tweeter-shared";
+import { StatusDTO } from "tweeter-shared";
 import { DataDAO } from "./DataDAO";
 import { StatusDAO } from "./StatusDAO";
 
@@ -6,7 +6,6 @@ export class StatusDAOImpl implements StatusDAO {
   private readonly tableDAO: DataDAO;
   private readonly storyTableName = "statuses";
   private readonly feedTableName = "feeds";
-  //private readonly indexName = "follows_index";
   private readonly userAttr = "user_alias";
   private readonly timeAttr = "timestamp";
   private readonly feedAttr = "followed_status";
@@ -14,7 +13,6 @@ export class StatusDAOImpl implements StatusDAO {
 
   constructor(tables: DataDAO) {
     this.tableDAO = tables;
-    //this.fileDAO = files;
   }
 
   async putPostedStatus(alias: string, newStatus: StatusDTO): Promise<void> {

@@ -9,8 +9,6 @@ export class UserService implements Service {
     authToken: AuthToken,
     alias: string
   ): Promise<User | null> {
-    // TODO: Replace with the result of calling server
-    // return FakeData.instance.findUserByAlias(alias);
     return await this.server.getUser({
       token: authToken.token,
       alias: alias,
@@ -21,8 +19,6 @@ export class UserService implements Service {
     alias: string,
     password: string
   ): Promise<[User, AuthToken]> {
-    // TODO: Replace with the result of calling the server
-    // const user = FakeData.instance.firstUser;
     const atAlias = "@" + alias;
 
     return await this.server.authenticate(
@@ -44,8 +40,6 @@ export class UserService implements Service {
   }
 
   public async logout(authToken: AuthToken): Promise<void> {
-    // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    //await new Promise((res) => setTimeout(res, 1000));
     await this.server.logout({ token: authToken.token });
   }
 
@@ -75,14 +69,6 @@ export class UserService implements Service {
       "register",
       "Invalid registration"
     );
-    /*
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-    if (user === null) {
-      throw new Error("Invalid registration");
-    }
-    return [user, FakeData.instance.authToken];
-    */
   }
 
   public async unfollow(
@@ -94,19 +80,6 @@ export class UserService implements Service {
       { token: authToken.token, user: userToUnfollow.DTO },
       "unfollow"
     );
-    /*
-    await new Promise((f) => setTimeout(f, 2000));
-    // TODO: Call the server
-    const followerCount = await this.getFollowerCount(
-      authToken,
-      userToUnfollow
-    );
-    const followeeCount = await this.getFolloweeCount(
-      authToken,
-      userToUnfollow
-    );
-    return [followerCount, followeeCount];
-    */
   }
 
   public async follow(
@@ -118,21 +91,12 @@ export class UserService implements Service {
       { token: authToken.token, user: userToFollow.DTO },
       "follow"
     );
-    /*
-    await new Promise((f) => setTimeout(f, 2000));
-    // TODO: Call the server
-    const followerCount = await this.getFollowerCount(authToken, userToFollow);
-    const followeeCount = await this.getFolloweeCount(authToken, userToFollow);
-    return [followerCount, followeeCount];
-    */
   }
 
   public async getFolloweeCount(
     authToken: AuthToken,
     user: User
   ): Promise<number> {
-    // TODO: Replace with the result of calling server
-    //return FakeData.instance.getFolloweeCount(user.alias);
     return await this.server.getFollowCount(
       { token: authToken.token, user: user.DTO },
       "followee"
@@ -143,8 +107,6 @@ export class UserService implements Service {
     authToken: AuthToken,
     user: User
   ): Promise<number> {
-    // TODO: Replace with the result of calling server
-    //return FakeData.instance.getFollowerCount(user.alias);
     return await this.server.getFollowCount(
       { token: authToken.token, user: user.DTO },
       "follower"
@@ -156,8 +118,6 @@ export class UserService implements Service {
     user: User,
     selectedUser: User
   ): Promise<boolean> {
-    // TODO: Replace with the result of calling server
-    //return FakeData.instance.isFollower();
     return await this.server.getIsFollowerStatus({
       token: authToken.token,
       user: user.DTO,

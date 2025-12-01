@@ -1,4 +1,4 @@
-import { AuthTokenDTO, UserDTO } from "tweeter-shared";
+import { AuthTokenDTO } from "tweeter-shared";
 
 export interface AuthDAO {
   putAuthInfo(alias: string, salt: string, hash: string): Promise<void>;
@@ -12,7 +12,6 @@ export interface AuthDAO {
   deleteToken(token: string): Promise<void>;
   getTokenExpireTime(token: string): Promise<number | undefined>;
   getTokenAlias(token: string): Promise<string | undefined>;
-  //getToken(alias: string): Promise<AuthTokenDTO | undefined>;
   updateTime(
     token: string,
     timestamp: number,

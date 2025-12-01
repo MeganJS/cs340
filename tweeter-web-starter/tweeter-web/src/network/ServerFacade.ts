@@ -9,7 +9,6 @@ import {
   FollowCountResponse,
   PagedItemRequest,
   PagedItemResponse,
-  RegisterRequest,
   Status,
   StatusDTO,
   StatusItemRequest,
@@ -84,20 +83,7 @@ export class ServerFacade {
     } catch (e: any) {
       throw new Error(e.message);
     }
-    return [items!, response.hasMore]; //TODO test this!!!!
-    // Handle errors
-    /*
-    if (response.success) {
-      if (items == null) {
-        throw new Error(`No ${followType}s found`);
-      } else {
-        return [items, response.hasMore];
-      }
-    } else {
-      console.error(response);
-      throw new Error(response.message ?? undefined);
-    }
-      */
+    return [items!, response.hasMore];
   }
 
   public async getMoreStatusItems(
@@ -119,7 +105,7 @@ export class ServerFacade {
     } catch (e: any) {
       throw new Error(e.message);
     }
-    return [items!, response.hasMore]; //TODO test this!!!!
+    return [items!, response.hasMore];
   }
 
   public async postStatus(request: StatusItemRequest): Promise<void> {
@@ -139,7 +125,7 @@ export class ServerFacade {
     const user = User.fromDTO(response.user);
 
     try {
-      this.checkResponse(response, () => {}); //TODO check if user is null?
+      this.checkResponse(response, () => {});
     } catch (e: any) {
       throw new Error(e.message);
     }
@@ -224,48 +210,4 @@ export class ServerFacade {
     }
     return response.checkResult;
   }
-
-  /*
-  public async login(request: AuthRequest): Promise<[User, AuthToken]> {
-    const response = await this.clientCommunicator.doPost<
-      AuthRequest,
-      AuthResponse
-    >(request, "/auth/login");
-    const user = User.fromDTO(response.user);
-    const authToken = AuthToken.fromDTO(response.authToken);
-
-    try {
-      this.checkAuthResponse(
-        response,
-        user,
-        authToken,
-        "Invalid alias or password"
-      );
-    } catch (e: any) {
-      throw new Error(e.message);
-    }
-    return [user!, authToken!]; //TODO test this
-  }
-
-  public async register(request: RegisterRequest): Promise<[User, AuthToken]> {
-    const response = await this.clientCommunicator.doPost<
-      RegisterRequest,
-      AuthResponse
-    >(request, "/auth/register");
-    const user = User.fromDTO(response.user);
-    const authToken = AuthToken.fromDTO(response.authToken);
-
-    try {
-      this.checkAuthResponse(
-        response,
-        user,
-        authToken,
-        "Invalid alias or password"
-      );
-    } catch (e: any) {
-      throw new Error(e.message);
-    }
-    return [user!, authToken!]; //TODO test this
-  }
-  */
 }

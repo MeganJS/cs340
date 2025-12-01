@@ -15,23 +15,22 @@ export class FollowService extends AuthenticationService implements Service {
     this.userDAO = daoFactory.userDAO;
   }
 
+  //TODO reduce duplication here
   public async loadMoreFollowees(
     token: string,
     userAlias: string,
     pageSize: number,
     lastUserItem: UserDTO | null
   ): Promise<[UserDTO[], boolean]> {
-    // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token); //TODO do I need to propagate errors?
     const [items, hasMore] = await this.followDAO.getPageOfFollowees(
       userAlias,
       pageSize,
       lastUserItem === null ? undefined : lastUserItem.alias
     );
-    //console.log(items);
+
     const userItems = await this.assembleUsers(items);
     return [userItems, hasMore];
-    //return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
   public async loadMoreFollowers(
@@ -40,17 +39,15 @@ export class FollowService extends AuthenticationService implements Service {
     pageSize: number,
     lastUserItem: UserDTO | null
   ): Promise<[UserDTO[], boolean]> {
-    // TODO: Replace with the result of calling server
     await this.checkTokenValidity(token); //TODO do I need to propagate errors?
     const [items, hasMore] = await this.followDAO.getPageOfFollowers(
       userAlias,
       pageSize,
       lastUserItem === null ? undefined : lastUserItem.alias
     );
-    //console.log(items);
+
     const userItems = await this.assembleUsers(items);
     return [userItems, hasMore];
-    //return await this.getFakeData(lastUserItem, pageSize, userAlias);
   }
 
   private async assembleUsers(items: string[]): Promise<UserDTO[]> {
@@ -58,7 +55,7 @@ export class FollowService extends AuthenticationService implements Service {
 
     for (let item of items) {
       let user = await this.userDAO.getUser(item);
-      //console.log(item, user);
+
       if (typeof user !== "undefined") {
         users.push(user);
       }
@@ -94,52 +91,22 @@ export class FollowService extends AuthenticationService implements Service {
     token: string,
     userToFollow: UserDTO
   ): Promise<[followerCount: number, followeeCount: number]> {
-    const userAlias = await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    const userAlias = await this.checkTokenValidity(token);
     await this.followDAO.putFollow(userAlias, userToFollow.alias);
     return await this.manageFollowCounts(userAlias, userToFollow.alias, 1);
-
-    // Pause so we can see the follow message. Remove when connected to the server
-    //await new Promise((f) => setTimeout(f, 2000));
-    //await this.updateFollowCounts(userAlias, userToFollow.alias, 1);
-    //await this.userDAO.updateUserFolloweesCount(userAlias, 1);
-    //await this.userDAO.updateUserFollowersCount(userToFollow.alias, 1);
-
-    // TODO: Call the server
-    //const followerCount = await this.getFollowerCount(token, userToFollow);
-    //const followeeCount = await this.getFolloweeCount(token, userToFollow);
-
-    //return this.getFollowCounts(userToFollow.alias);
   }
-
-  /*
-  public async getFolloweeCount(token: string, user: UserDTO): Promise<number> {
-    const userAlias = await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getFolloweeCount(user.alias);
-  }
-
-  public async getFollowerCount(token: string, user: UserDTO): Promise<number> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    // TODO: Replace with the result of calling server
-    const counts = await this.getFollowCounts(user.alias);
-    return counts[0];
-    //return FakeData.instance.getFollowerCount(user.alias);
-  }
-    */
 
   public async getFollowCount(
     token: string,
     alias: string,
     follower: boolean
   ): Promise<number> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
-    // TODO: Replace with the result of calling server
+    await this.checkTokenValidity(token);
     const [followerCount, followeeCount] = await this.getFollowCounts(alias);
     if (follower) {
       return followerCount;
     }
     return followeeCount;
-    //return counts[0];
   }
 
   private async manageFollowCounts(
@@ -176,9 +143,7 @@ export class FollowService extends AuthenticationService implements Service {
     user: UserDTO,
     selectedUser: UserDTO
   ): Promise<boolean> {
-    // TODO: Replace with the result of calling server
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    await this.checkTokenValidity(token);
     return await this.followDAO.getFollow(user.alias, selectedUser.alias);
-    //return FakeData.instance.isFollower();
   }
 }

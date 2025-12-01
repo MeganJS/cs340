@@ -4,14 +4,12 @@ import { DataDAO } from "./DataDAO";
 
 export class AuthDAOImpl implements AuthDAO {
   private readonly tableDAO: DataDAO;
-  //private readonly fileDAO: DataDAO;
   private readonly authTableName = "auth";
   private readonly authAttr = "alias";
   private readonly authHashAttr = "hash";
   private readonly authSaltAttr = "salt";
 
   private readonly sessTableName = "sessions";
-  //private readonly sessIndexName = "alias_index";
   private readonly sessTokenAttr = "token";
   private readonly sessAliasAttr = "alias";
   private readonly sessTimeAttr = "date_time";
@@ -19,7 +17,6 @@ export class AuthDAOImpl implements AuthDAO {
 
   constructor(tables: DataDAO) {
     this.tableDAO = tables;
-    //this.fileDAO = files;
   }
 
   async putAuthInfo(alias: string, salt: string, hash: string): Promise<void> {

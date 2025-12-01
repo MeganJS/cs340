@@ -27,8 +27,6 @@ export class StatusService implements Service {
     authToken: AuthToken,
     newStatus: Status
   ): Promise<void> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    //await new Promise((f) => setTimeout(f, 2000));
     await this.server.postStatus({
       token: authToken.token,
       statusItem: newStatus.DTO,

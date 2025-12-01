@@ -40,7 +40,6 @@ export class DynamoDbDAO implements DataDAO {
   }
 
   async getData(requestParams: GetCommandInput): Promise<GetCommandOutput> {
-    //const output = await this.client.send(new GetCommand(params));
     return await this.client.send(new GetCommand(requestParams));
   }
 

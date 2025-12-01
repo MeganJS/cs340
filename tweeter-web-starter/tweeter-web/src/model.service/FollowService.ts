@@ -22,25 +22,4 @@ export class FollowService implements Service {
       followType
     );
   }
-
-  /*
-  public async loadMoreFollowers(
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastUserItem: User | null
-  ): Promise<[User[], boolean]> {
-    // TODO: Replace with the result of calling server
-    // return FakeData.instance.getPageOfUsers(lastUserItem, pageSize, userAlias);
-    return this.server.getMoreFollowItems(
-      {
-        token: authToken.token,
-        alias: userAlias,
-        pageSize: pageSize,
-        lastItem: lastUserItem,
-      },
-      "follower"
-    );
-  }
-  */
 }

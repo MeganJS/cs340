@@ -1,14 +1,11 @@
 import { DataDAO } from "./DataDAO";
 import {
   DeleteObjectCommand,
-  DeleteObjectCommandInput,
   DeleteObjectRequest,
   GetObjectCommand,
-  GetObjectCommandInput,
   GetObjectOutput,
   GetObjectRequest,
   PutObjectCommand,
-  PutObjectCommandInput,
   PutObjectRequest,
   RenameObjectCommand,
   RenameObjectRequest,
@@ -39,7 +36,6 @@ export class S3DAO implements DataDAO {
   }
 
   async getData(requestParams: GetObjectRequest): Promise<GetObjectOutput> {
-    //const output = await this.client.send(new GetCommand(params));
     return await this.client.send(new GetObjectCommand(requestParams));
   }
 
