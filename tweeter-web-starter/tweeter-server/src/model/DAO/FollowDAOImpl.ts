@@ -41,7 +41,7 @@ export class FollowDAOImpl implements FollowDAO {
   async deleteFollow(followerAlias: string, followeeAlias: string) {
     const params = {
       TableName: this.tableName,
-      Item: {
+      Key: {
         [this.followerAttr]: followerAlias,
         [this.followeeAttr]: followeeAlias,
       },
