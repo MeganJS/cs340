@@ -47,9 +47,9 @@ export class ServerFacade {
   ) {
     this.checkResponse(response, () => {
       if (user == null || authToken == null) {
-        throw new Error(message);
+        throw new Error(response.message ?? message);
       }
-    }); //TODO check if user is null?
+    });
   }
 
   private checkResponse<REQ extends TweeterResponse>(
@@ -141,16 +141,16 @@ export class ServerFacade {
       request,
       `/auth/${path}`
     );
+    const user = User.fromDTO(response.user);
+    const authToken = AuthToken.fromDTO(response.authToken);
 
     try {
-      //this.checkAuthResponse(response, user, authToken, errMessage);
-      this.checkResponse(response, () => {});
+      this.checkAuthResponse(response, user, authToken, errMessage);
     } catch (e: any) {
       throw new Error(e.message);
     }
-    const user = User.fromDTO(response.user);
-    const authToken = AuthToken.fromDTO(response.authToken);
-    return [user!, authToken!]; //TODO test this
+
+    return [user!, authToken!];
   }
 
   public async logout(request: TokenRequest): Promise<void> {
@@ -172,11 +172,11 @@ export class ServerFacade {
     >(request, `/user/${path}`);
 
     try {
-      this.checkResponse(response, () => {}); //TODO consider error checking?
+      this.checkResponse(response, () => {});
     } catch (e: any) {
       throw new Error(e.message);
     }
-    return [response.followerCount, response.followeeCount]; //TODO test this
+    return [response.followerCount, response.followeeCount];
   }
 
   public async getFollowCount(
@@ -189,11 +189,11 @@ export class ServerFacade {
     >(request, `/${path}/count`);
 
     try {
-      this.checkResponse(response, () => {}); //TODO consider error checking?
+      this.checkResponse(response, () => {});
     } catch (e: any) {
       throw new Error(e.message);
     }
-    return response.count; //TODO test this
+    return response.count;
   }
 
   public async getIsFollowerStatus(
@@ -205,7 +205,7 @@ export class ServerFacade {
     >(request, "/user/is_follower");
 
     try {
-      this.checkResponse(response, () => {}); //TODO consider error checking?
+      this.checkResponse(response, () => {});
     } catch (e: any) {
       throw new Error(e.message);
     }

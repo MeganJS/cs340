@@ -15,6 +15,17 @@ export class FollowService extends AuthenticationService implements Service {
     this.userDAO = daoFactory.userDAO;
   }
 
+  private async loadMoreFollowItems(
+    token: string,
+    operation: () => Promise<[items: string[], hasMore: boolean]>
+  ): Promise<[UserDTO[], boolean]> {
+    await this.checkTokenValidity(token);
+    const [items, hasMore] = await operation();
+
+    const userItems = await this.assembleUsers(items);
+    return [userItems, hasMore];
+  }
+
   //TODO reduce duplication here
   public async loadMoreFollowees(
     token: string,
@@ -22,7 +33,15 @@ export class FollowService extends AuthenticationService implements Service {
     pageSize: number,
     lastUserItem: UserDTO | null
   ): Promise<[UserDTO[], boolean]> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    return await this.loadMoreFollowItems(token, async () => {
+      return await this.followDAO.getPageOfFollowees(
+        userAlias,
+        pageSize,
+        lastUserItem === null ? undefined : lastUserItem.alias
+      );
+    });
+    /*
+    await this.checkTokenValidity(token);
     const [items, hasMore] = await this.followDAO.getPageOfFollowees(
       userAlias,
       pageSize,
@@ -31,6 +50,7 @@ export class FollowService extends AuthenticationService implements Service {
 
     const userItems = await this.assembleUsers(items);
     return [userItems, hasMore];
+    */
   }
 
   public async loadMoreFollowers(
@@ -39,7 +59,15 @@ export class FollowService extends AuthenticationService implements Service {
     pageSize: number,
     lastUserItem: UserDTO | null
   ): Promise<[UserDTO[], boolean]> {
-    await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    return await this.loadMoreFollowItems(token, async () => {
+      return await this.followDAO.getPageOfFollowers(
+        userAlias,
+        pageSize,
+        lastUserItem === null ? undefined : lastUserItem.alias
+      );
+    });
+    /*
+    await this.checkTokenValidity(token);
     const [items, hasMore] = await this.followDAO.getPageOfFollowers(
       userAlias,
       pageSize,
@@ -48,6 +76,7 @@ export class FollowService extends AuthenticationService implements Service {
 
     const userItems = await this.assembleUsers(items);
     return [userItems, hasMore];
+    */
   }
 
   private async assembleUsers(items: string[]): Promise<UserDTO[]> {
@@ -82,7 +111,7 @@ export class FollowService extends AuthenticationService implements Service {
     token: string,
     userToUnfollow: UserDTO
   ): Promise<[followerCount: number, followeeCount: number]> {
-    const userAlias = await this.checkTokenValidity(token); //TODO do I need to propagate errors?
+    const userAlias = await this.checkTokenValidity(token);
     await this.followDAO.deleteFollow(userAlias, userToUnfollow.alias);
     return await this.manageFollowCounts(userAlias, userToUnfollow.alias, -1);
   }

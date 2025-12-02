@@ -92,7 +92,6 @@ export class StatusDAOImpl implements StatusDAO {
             },
       ScanIndexForward: false,
     };
-    //Source: https://www.omarileon.me/blog/typescript-merge-objects
     let data = await this.tableDAO.queryData(params);
 
     const hasMore = data.LastEvaluatedKey !== undefined;
