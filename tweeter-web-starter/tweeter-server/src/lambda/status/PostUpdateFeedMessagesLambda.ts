@@ -25,12 +25,12 @@ export const handler = async function (event: any) {
       const alias: string = body_parsed.alias;
       const token: string = body_parsed.alias;
       let hasMore: boolean = true;
-      let all_items: UserDTO[] = [];
+      let aliases: string[] = [];
       let items: UserDTO[] = [];
       let lastUserItem: UserDTO | null = null;
       let messageBody: UpdateFeedMessage;
       while (hasMore) {
-        while (all_items.length < 76) {
+        while (aliases.length < 76) {
           [items, hasMore] = await followService.loadMoreFollowees(
             token,
             alias,
@@ -40,19 +40,22 @@ export const handler = async function (event: any) {
           if (items.length > 0) {
             lastUserItem = items[items.length - 1];
           }
-          all_items = [...all_items, ...items];
+          for (let item of items) {
+            aliases.push(item.alias);
+          }
+          //all_items = [...all_items, ...items];
         }
 
         messageBody = {
           token: token,
-          items: all_items,
+          aliases: aliases,
           status: body_parsed.status,
         };
         await SqsDAO.instance.sendMessage(
           SQS_UPDATE_FEED_URL,
           JSON.stringify(messageBody)
         ); //TODO does this work??? is this wise???
-        all_items = [];
+        aliases = [];
       }
 
       //ensure each loop takes 1 second at least

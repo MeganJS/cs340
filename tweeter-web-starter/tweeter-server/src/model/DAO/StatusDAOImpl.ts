@@ -23,6 +23,56 @@ export class StatusDAOImpl implements StatusDAO {
     await this.putStatus(alias, newStatus, this.feedTableName, this.feedAttr);
   }
 
+  async putFollowedStatusBatch(
+    aliases: string[],
+    newStatus: StatusDTO
+  ): Promise<void> {
+    if (aliases.length == 0) {
+      console.log("No followee aliases to write status to");
+      return;
+    }
+
+    const params = {
+      RequestItems: {
+        [this.feedTableName]: this.createPutStatusRequestList(
+          aliases,
+          newStatus,
+          this.feedAttr
+        ),
+      },
+    };
+
+    await this.tableDAO.writeBatchData!(params);
+  }
+
+  private createPutStatusRequestList(
+    aliases: string[],
+    newStatus: StatusDTO,
+    statusAttr: string
+  ) {
+    return aliases.map((alias) =>
+      this.createPutStatusRequest(alias, newStatus, statusAttr)
+    );
+  }
+
+  private createPutStatusRequest(
+    alias: string,
+    newStatus: StatusDTO,
+    statusAttr: string
+  ) {
+    const item = {
+      [this.userAttr]: alias,
+      [this.timeAttr]: newStatus.timestamp,
+      [statusAttr]: JSON.stringify(newStatus),
+    };
+
+    return {
+      PutRequest: {
+        Item: item,
+      },
+    };
+  }
+
   private async putStatus(
     alias: string,
     newStatus: StatusDTO,

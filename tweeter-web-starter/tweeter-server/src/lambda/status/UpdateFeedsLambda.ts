@@ -1,4 +1,6 @@
+import { UserDTO } from "tweeter-shared";
 import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
+import { UpdateFeedMessage } from "../../model/message/UpdateFeedMessage";
 import { StatusService } from "../../model/service/StatusService";
 
 export const handler = async function (event: any) {
@@ -8,8 +10,23 @@ export const handler = async function (event: any) {
     const startTimeMillis = new Date().getTime();
 
     const { body } = event.Records[i];
-    // TODO: Add code to print message body to the log.
     console.log(body);
+    const body_parsed: UpdateFeedMessage = JSON.parse(body);
+
+    let aliases: string[] = body_parsed.aliases;
+    let itemsToSend: string[] = [];
+    let sendMore: boolean = aliases.length > 0;
+    while (sendMore) {
+      if (aliases.length < 26) {
+        //TODO statusService batch update
+        sendMore = false;
+        break;
+      }
+      itemsToSend = aliases.slice(0, 25);
+      aliases = aliases.slice(25);
+      //TODO statusService batch update
+      sendMore = aliases.length > 0;
+    }
 
     //ensure each loop takes 1 second at least
     const elapsedTime = new Date().getTime() - startTimeMillis;

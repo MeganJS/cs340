@@ -4,6 +4,11 @@ export interface StatusDAO {
   putPostedStatus(alias: string, newStatus: StatusDTO): Promise<void>;
   putFollowedStatus(alias: string, newStatus: StatusDTO): Promise<void>;
 
+  putFollowedStatusBatch(
+    aliases: string[],
+    newStatus: StatusDTO
+  ): Promise<void>;
+
   getPageOfStoryItems(
     alias: string,
     pageSize: number,
