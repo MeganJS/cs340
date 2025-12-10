@@ -6,12 +6,12 @@ import { FollowDAO } from "../DAO/FollowDAO";
 import { StatusDAO } from "../DAO/StatusDAO";
 
 export class StatusService extends AuthenticationService implements Service {
-  private followDAO: FollowDAO;
+  //private followDAO: FollowDAO;
   private statusDAO: StatusDAO;
 
   constructor(daoFactory: DAOFactory) {
     super(daoFactory);
-    this.followDAO = daoFactory.followDAO;
+    //this.followDAO = daoFactory.followDAO;
     this.statusDAO = daoFactory.statusDAO;
   }
 
@@ -47,7 +47,7 @@ export class StatusService extends AuthenticationService implements Service {
     //await new Promise((f) => setTimeout(f, 2000));
     const userAlias = await this.checkTokenValidity(token);
     await this.statusDAO.putPostedStatus(userAlias, newStatus);
-
+    /*
     let hasMore = true;
     let lastFollowerHandle: string | undefined = undefined;
     let items: string[] = [];
@@ -62,6 +62,7 @@ export class StatusService extends AuthenticationService implements Service {
       }
       lastFollowerHandle = items[items.length - 1];
     }
+      */
   }
 
   public async updateFeedsFromList(

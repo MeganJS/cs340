@@ -103,9 +103,9 @@ export class FollowDAOImpl implements FollowDAO {
     let data: any;
     if (followAttr === this.followerAttr) {
       let params2 = { IndexName: this.indexName, ...params };
-      data = await this.tableDAO.queryData(params2);
+      data = await this.tableDAO.queryData!(params2);
     } else {
-      data = await this.tableDAO.queryData(params);
+      data = await this.tableDAO.queryData!(params);
     }
 
     const hasMore = data.LastEvaluatedKey !== undefined;
