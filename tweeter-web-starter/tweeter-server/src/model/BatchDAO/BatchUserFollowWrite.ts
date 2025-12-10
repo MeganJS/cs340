@@ -71,7 +71,7 @@ function createUserList(createdUserCount: number) {
   for (let i = start; i < limit; ++i) {
     let user = new User(
       `${baseFollowerFirstName}_${i}`,
-      `${baseFollowerLastName}_${i}`,
+      `${baseFollowerLastName}`,
       `${baseFollowerAlias}${i}`,
       followerImageUrl
     );

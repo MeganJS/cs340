@@ -12,6 +12,9 @@ import {
   QueryCommand,
   QueryCommandInput,
   QueryCommandOutput,
+  BatchWriteCommand,
+  BatchWriteCommandInput,
+  BatchWriteCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DataDAO } from "./DataDAO";
@@ -33,6 +36,12 @@ export class DynamoDbDAO implements DataDAO {
 
   async putData(requestParams: PutCommandInput): Promise<void> {
     await this.client.send(new PutCommand(requestParams));
+  }
+
+  async writeBatchData(
+    requestParams: BatchWriteCommandInput
+  ): Promise<BatchWriteCommandOutput> {
+    return await this.client.send(new BatchWriteCommand(requestParams));
   }
 
   async deleteData(requestParams: DeleteCommandInput): Promise<void> {

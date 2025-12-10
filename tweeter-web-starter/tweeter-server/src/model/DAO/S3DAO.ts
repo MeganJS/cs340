@@ -31,6 +31,12 @@ export class S3DAO implements DataDAO {
     await this.client.send(new PutObjectCommand(requestParams));
   }
 
+  async writeBatchData(
+    requestParams: BatchWriteCommandInput
+  ): Promise<BatchWriteCommandOutput> {
+    return await this.client.send(new BatchWriteCommand(requestParams));
+  }
+
   async deleteData(requestParams: DeleteObjectRequest): Promise<void> {
     await this.client.send(new DeleteObjectCommand(requestParams));
   }
