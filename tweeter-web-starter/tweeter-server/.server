@@ -18,4 +18,4 @@ tweeterPostStatus | lambda/status/PostStatusLambda.handler
 tweeterPostUpdateFeedMessages | lambda/status/PostUpdateFeedMessagesLambda.handler
 tweeterUpdateFeeds | lambda/status/UpdateFeedsLambda.handler
 '
-LAMBDALAYER_ARN='arn:aws:lambda:us-west-2:649209434077:layer:tweeter-service-dependencies:15'
+LAMBDALAYER_ARN='arn:aws:lambda:us-west-2:649209434077:layer:tweeter-service-dependencies:16'
