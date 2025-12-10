@@ -1,15 +1,12 @@
-import { UserDTO } from "tweeter-shared";
-import {
-  DAOFactoryImpl,
-  SQS_UPDATE_FEED_URL,
-} from "../../model/DAO/DAOFactoryImpl";
+import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 import { FollowService } from "../../model/service/FollowService";
-import { SqsDAO } from "../../model/DAO/SqsDAO";
 import { UpdateFeedMessage } from "../../model/message/UpdateFeedMessage";
 import { PostStatusMessage } from "../../model/message/PostStatusMessage";
+import { MessageService } from "../../model/service/MessageService";
 
 export const handler = async function (event: any) {
   const followService = new FollowService(DAOFactoryImpl.instance);
+  const messageService = new MessageService(DAOFactoryImpl.instance);
 
   for (let i = 0; i < event.Records.length; ++i) {
     try {
@@ -21,6 +18,13 @@ export const handler = async function (event: any) {
       console.log(body);
 
       const body_parsed: PostStatusMessage = JSON.parse(body);
+      await messageService.sendUpdateFeedsMessages(
+        body_parsed.token,
+        body_parsed.alias,
+        body_parsed.status,
+        followService
+      );
+      /*
 
       const alias: string = body_parsed.alias;
       const token: string = body_parsed.alias;
@@ -57,6 +61,7 @@ export const handler = async function (event: any) {
         ); //TODO does this work??? is this wise???
         aliases = [];
       }
+        */
 
       //ensure each loop takes 1 second at least
       const elapsedTime = new Date().getTime() - startTimeMillis;

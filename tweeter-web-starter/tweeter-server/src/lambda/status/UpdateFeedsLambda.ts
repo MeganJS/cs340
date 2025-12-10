@@ -1,4 +1,3 @@
-import { UserDTO } from "tweeter-shared";
 import { DAOFactoryImpl } from "../../model/DAO/DAOFactoryImpl";
 import { UpdateFeedMessage } from "../../model/message/UpdateFeedMessage";
 import { StatusService } from "../../model/service/StatusService";
@@ -13,20 +12,38 @@ export const handler = async function (event: any) {
     console.log(body);
     const body_parsed: UpdateFeedMessage = JSON.parse(body);
 
+    await statusService.updateFeedsFromList(
+      body_parsed.token,
+      body_parsed.aliases,
+      body_parsed.status
+    );
+
+    /*
     let aliases: string[] = body_parsed.aliases;
     let itemsToSend: string[] = [];
     let sendMore: boolean = aliases.length > 0;
     while (sendMore) {
       if (aliases.length < 26) {
-        //TODO statusService batch update
+        await statusService.updateFeeds(
+          body_parsed.token,
+          aliases,
+          body_parsed.status
+        );
+
         sendMore = false;
         break;
       }
       itemsToSend = aliases.slice(0, 25);
       aliases = aliases.slice(25);
+      await statusService.updateFeeds(
+        body_parsed.token,
+        itemsToSend,
+        body_parsed.status
+      );
       //TODO statusService batch update
       sendMore = aliases.length > 0;
     }
+      */
 
     //ensure each loop takes 1 second at least
     const elapsedTime = new Date().getTime() - startTimeMillis;

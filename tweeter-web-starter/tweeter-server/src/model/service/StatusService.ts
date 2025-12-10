@@ -63,4 +63,34 @@ export class StatusService extends AuthenticationService implements Service {
       lastFollowerHandle = items[items.length - 1];
     }
   }
+
+  public async updateFeedsFromList(
+    token: string,
+    aliases: string[],
+    newStatus: StatusDTO
+  ) {
+    let itemsToSend: string[] = [];
+    let sendMore: boolean = aliases.length > 0;
+    while (sendMore) {
+      if (aliases.length < 26) {
+        await this.updateFeeds(token, aliases, newStatus);
+
+        sendMore = false;
+        break;
+      }
+      itemsToSend = aliases.slice(0, 25);
+      aliases = aliases.slice(25);
+      await this.updateFeeds(token, itemsToSend, newStatus);
+      sendMore = aliases.length > 0;
+    }
+  }
+
+  public async updateFeeds(
+    token: string,
+    aliases: string[],
+    newStatus: StatusDTO
+  ) {
+    await this.checkTokenValidity(token);
+    await this.statusDAO.putFollowedStatusBatch(aliases, newStatus);
+  }
 }

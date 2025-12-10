@@ -5,6 +5,7 @@ import { DynamoDbDAO } from "./DynamoDbDAO";
 import { FollowDAO } from "./FollowDAO";
 import { FollowDAOImpl } from "./FollowDAOImpl";
 import { S3DAO } from "./S3DAO";
+import { SqsDAO } from "./SqsDAO";
 import { StatusDAO } from "./StatusDAO";
 import { StatusDAOImpl } from "./StatusDAOImpl";
 import { UserDAO } from "./UserDAO";
@@ -12,14 +13,17 @@ import { UserDAOImpl } from "./UserDAOImpl";
 
 export const BUCKET: string = "cs340-tweeter-images-247";
 export const REGION: string = "us-west-2";
-export const SQS_POST_STATUS_URL: string = "";
-export const SQS_UPDATE_FEED_URL: string = "";
+export const SQS_POST_STATUS_URL: string =
+  "https://sqs.us-west-2.amazonaws.com/649209434077/TweeterPostStatus";
+export const SQS_UPDATE_FEED_URL: string =
+  "https://sqs.us-west-2.amazonaws.com/649209434077/TweeterUpdateFeeds";
 
 export class DAOFactoryImpl implements DAOFactory {
   public followDAO: FollowDAO;
   public statusDAO: StatusDAO;
   public userDAO: UserDAO;
   public authDAO: AuthDAO;
+  public sqsDAO: SqsDAO;
   static _instance: DAOFactoryImpl;
 
   constructor() {
@@ -27,6 +31,7 @@ export class DAOFactoryImpl implements DAOFactory {
     this.userDAO = new UserDAOImpl(DynamoDbDAO.instance, S3DAO.instance);
     this.statusDAO = new StatusDAOImpl(DynamoDbDAO.instance);
     this.authDAO = new AuthDAOImpl(DynamoDbDAO.instance);
+    this.sqsDAO = SqsDAO.instance;
   }
 
   public static get instance(): DAOFactoryImpl {
