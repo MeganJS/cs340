@@ -1,6 +1,7 @@
 import { UserDTO } from "tweeter-shared";
 import { UserDAO } from "./UserDAO";
-import { BUCKET, DataDAO, REGION } from "./DataDAO";
+import { DataDAO } from "./DataDAO";
+import { BUCKET, REGION } from "./DAOFactoryImpl";
 import { ObjectCannedACL } from "@aws-sdk/client-s3";
 
 export class UserDAOImpl implements UserDAO {

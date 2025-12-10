@@ -92,7 +92,7 @@ export class StatusDAOImpl implements StatusDAO {
             },
       ScanIndexForward: false,
     };
-    let data = await this.tableDAO.queryData(params);
+    let data = await this.tableDAO.queryData!(params);
 
     const hasMore = data.LastEvaluatedKey !== undefined;
     const items: StatusDTO[] = [];

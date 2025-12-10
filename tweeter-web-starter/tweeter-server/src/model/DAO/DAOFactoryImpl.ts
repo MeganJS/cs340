@@ -10,6 +10,11 @@ import { StatusDAOImpl } from "./StatusDAOImpl";
 import { UserDAO } from "./UserDAO";
 import { UserDAOImpl } from "./UserDAOImpl";
 
+export const BUCKET: string = "cs340-tweeter-images-247";
+export const REGION: string = "us-west-2";
+export const SQS_POST_STATUS_URL: string = "";
+export const SQS_UPDATE_FEED_URL: string = "";
+
 export class DAOFactoryImpl implements DAOFactory {
   public followDAO: FollowDAO;
   public statusDAO: StatusDAO;
