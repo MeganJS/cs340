@@ -34,26 +34,28 @@ export class MessageService implements Service {
   ) {
     let hasMore: boolean = true;
     let aliases: string[] = [];
-    let items: UserDTO[] = [];
-    let lastUserItem: UserDTO | null = null;
-    let messageBody: UpdateFeedMessage;
-    while (hasMore) {
-      while (aliases.length < 76 && hasMore) {
-        [items, hasMore] = await followService.loadMoreFollowees(
-          token,
-          alias,
-          25,
-          lastUserItem
-        );
-        if (items.length > 0) {
-          lastUserItem = items[items.length - 1];
-        }
-        for (let item of items) {
-          aliases.push(item.alias);
-        }
+    let items: string[] = [];
+    let lastUserItem: string | null = null;
+    //let messageBody: UpdateFeedMessage;
+    while (hasMore === true) {
+      //const startTimeMillis = new Date().getTime();
+      //while (aliases.length < 51 && hasMore) {
+      [items, hasMore] = await followService.loadFollowerBatch(
+        token,
+        alias,
+        100,
+        lastUserItem
+      );
+      //console.log(hasMore);
+      if (items.length > 0) {
+        lastUserItem = items[items.length - 1];
       }
-
-      messageBody = {
+      for (let item of items) {
+        aliases.push(item);
+      }
+      //await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+      //}
+      let messageBody: UpdateFeedMessage = {
         token: token,
         aliases: aliases,
         status: newStatus,
@@ -63,6 +65,15 @@ export class MessageService implements Service {
         JSON.stringify(messageBody)
       ); //TODO does this work??? is this wise???
       aliases = [];
+      await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+      /*
+      const elapsedTime = new Date().getTime() - startTimeMillis;
+      if (elapsedTime < 1000) {
+        await new Promise<void>((resolve) =>
+          setTimeout(resolve, 1000 - elapsedTime)
+        );
+      }
+        */
     }
   }
 }

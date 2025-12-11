@@ -16,10 +16,6 @@ export class SqsDAO {
   }
 
   async sendMessage(sqs_url: string, messageBody: string): Promise<void> {
-    //const sqs_url =
-    //  "https://sqs.us-west-2.amazonaws.com/649209434077/SQSExcercise";
-    //const messageBody = "testing testing 123";
-
     const params = {
       DelaySeconds: 10,
       MessageBody: messageBody,

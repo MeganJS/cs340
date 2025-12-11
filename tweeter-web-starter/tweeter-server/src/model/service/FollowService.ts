@@ -79,6 +79,32 @@ export class FollowService extends AuthenticationService implements Service {
     */
   }
 
+  public async loadFollowerBatch(
+    token: string,
+    userAlias: string,
+    pageSize: number,
+    lastUserItem: string | null
+  ): Promise<[string[], boolean]> {
+    //return await this.loadMoreFollowItems(token, async () => {
+    return await this.followDAO.getPageOfFollowers(
+      userAlias,
+      pageSize,
+      lastUserItem === null ? undefined : lastUserItem
+    );
+    //});
+    /*
+    await this.checkTokenValidity(token);
+    const [items, hasMore] = await this.followDAO.getPageOfFollowers(
+      userAlias,
+      pageSize,
+      lastUserItem === null ? undefined : lastUserItem.alias
+    );
+
+    const userItems = await this.assembleUsers(items);
+    return [userItems, hasMore];
+    */
+  }
+
   private async assembleUsers(items: string[]): Promise<UserDTO[]> {
     const users: UserDTO[] = [];
 
