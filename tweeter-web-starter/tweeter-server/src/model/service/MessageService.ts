@@ -65,7 +65,7 @@ export class MessageService implements Service {
         JSON.stringify(messageBody)
       ); //TODO does this work??? is this wise???
       aliases = [];
-      await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+      await new Promise<void>((resolve) => setTimeout(resolve, 500));
       /*
       const elapsedTime = new Date().getTime() - startTimeMillis;
       if (elapsedTime < 1000) {
